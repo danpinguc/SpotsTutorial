@@ -16,6 +16,14 @@
     // Spanish from REDCap; the tutorial loads Spanish from `translations.csv`
     // at init via `loadTranslations()` and reads it through `t(en)`.
     language: 'en',
+    // Set true after the user dismisses the welcome intro popup. The popup
+    // only shows on the first render of the welcome screen in session 1.
+    // We don't persist this across page reloads — refresh = restart the
+    // whole tutorial, including the intro.
+    introDismissed: false,
+    // Set true after the user dismisses the "log in again" popup on the
+    // session-2 login screen. Same no-persistence rule.
+    loginPromptDismissed: false,
     screen: 'welcome',
     selected: [],
     currentBodyPart: null,
@@ -2242,6 +2250,107 @@
     );
   }
 
+  // First-load orientation popup. Shown ONCE on the home screen in session
+  // 1, right after the user clicks "Get Started" on the welcome screen.
+  // Calls out the floating tutorial-progress button (top-right) and the
+  // per-step `?` hint buttons inside it. Dismissed via the "Got it!"
+  // button, Escape, or backdrop click. State lives on `introDismissed`.
+  function introModal() {
+    if (state.introDismissed) return null;
+    if (state.session !== 1) return null;
+    if (state.screen !== 'home') return null;
+
+    function dismiss() {
+      state.introDismissed = true;
+      render();
+    }
+
+    // Mini-illustration of the tutorial dock — same chrome (ring + cap icon)
+    // as the live dock so the user recognizes it.
+    const dockMini = el('div', { class: 'intro-dock-mini', 'aria-hidden': 'true' },
+      el('span', { class: 'intro-dock-ring', html:
+        '<svg viewBox="0 0 60 60" aria-hidden="true">' +
+          '<circle cx="30" cy="30" r="26" fill="none" stroke-width="4" />' +
+          '<circle cx="30" cy="30" r="26" fill="none" stroke-width="4" ' +
+          'stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="98" ' +
+          'transform="rotate(-90 30 30)" />' +
+        '</svg>'
+      }),
+      el('span', { class: 'intro-dock-cap', html:
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+          '<path fill="currentColor" d="M12 3L1.5 8.5 12 14l8.5-4.46V15a.75.75 0 0 0 1.5 0V8.5L12 3z"/>' +
+          '<path fill="currentColor" d="M5 12.18v3.05c0 .66.39 1.26 1 1.53 1.74.79 3.83 1.24 6 1.24s4.26-.45 6-1.24c.61-.27 1-.87 1-1.53v-3.05L12 15.5l-7-3.32z"/>' +
+        '</svg>'
+      }),
+    );
+
+    return el('div', {
+      class: 'modal-backdrop intro-backdrop',
+      onclick: (e) => { if (e.target.classList.contains('modal-backdrop')) dismiss(); },
+    },
+      el('div', {
+        class: 'modal-card tutorial-popup intro-card',
+        role: 'dialog',
+        'aria-modal': 'true',
+        'aria-labelledby': 'intro-modal-title',
+        onclick: (e) => e.stopPropagation(),
+      },
+        el('h2', { id: 'intro-modal-title' }, t('Quick Tutorial Tips')),
+        el('p', { class: 'tutorial-popup-sub' }, t('Two things to know before you start:')),
+        el('div', { class: 'intro-rows' },
+          el('div', { class: 'intro-row' },
+            dockMini,
+            el('p', {}, t('Your tutorial progress lives in the top-right corner. Click it any time to see your steps.')),
+          ),
+          el('div', { class: 'intro-row' },
+            el('span', { class: 'intro-hint-badge', 'aria-hidden': 'true' }, '?'),
+            el('p', {}, t('Inside tutorial progress, click the ? next to any step to watch a quick demo.')),
+          ),
+        ),
+        el('div', { class: 'tutorial-popup-actions' },
+          el('button', { class: 'btn-pill primary', onclick: dismiss }, t('Got it!')),
+        ),
+      ),
+    );
+  }
+
+  // Session-2 login prompt. Shown when the user lands on the login screen
+  // (only reachable via logout() at the end of session 1). Tells the user
+  // they need to sign back in to begin session 2, so the screen change
+  // doesn't feel like an unexplained dead end. Uses the same chassis as
+  // the welcome intro popup for visual consistency.
+  function loginPromptModal() {
+    if (state.loginPromptDismissed) return null;
+    if (state.screen !== 'login') return null;
+
+    function dismiss() {
+      state.loginPromptDismissed = true;
+      render();
+    }
+
+    return el('div', {
+      class: 'modal-backdrop intro-backdrop',
+      onclick: (e) => { if (e.target.classList.contains('modal-backdrop')) dismiss(); },
+    },
+      el('div', {
+        class: 'modal-card tutorial-popup login-prompt-card',
+        role: 'dialog',
+        'aria-modal': 'true',
+        'aria-labelledby': 'login-prompt-title',
+        onclick: (e) => e.stopPropagation(),
+      },
+        el('h2', { id: 'login-prompt-title' }, t('Session 1 complete!')),
+        el('p', { class: 'tutorial-popup-sub' }, t('Please sign back in to start your second session.')),
+        el('p', { class: 'login-prompt-body' },
+          t("Great work — you finished session 1. Use the form below to log back in and pick up where you left off."),
+        ),
+        el('div', { class: 'tutorial-popup-actions' },
+          el('button', { class: 'btn-pill primary', onclick: dismiss }, t('Got it!')),
+        ),
+      ),
+    );
+  }
+
   function hintModal() {
     const key = state.activeHintKey;
     if (!key) return null;
@@ -2378,7 +2487,7 @@
       onclick: (e) => { if (e.target.classList.contains('modal-backdrop')) close(); },
     },
       el('div', {
-        class: 'modal-card hint-card',
+        class: 'modal-card tutorial-popup hint-card',
         role: 'dialog',
         'aria-modal': 'true',
         'aria-labelledby': 'hint-modal-title',
@@ -2390,9 +2499,9 @@
           onclick: close,
         }, '×'),
         el('h2', { id: 'hint-modal-title' }, title),
-        el('p', { class: 'hint-sub' }, t('Watch the example below')),
+        el('p', { class: 'tutorial-popup-sub' }, t('Watch the example below')),
         body,
-        el('div', { class: 'hint-actions' },
+        el('div', { class: 'tutorial-popup-actions' },
           el('button', { class: 'btn-pill primary', onclick: close }, t('Got it')),
         ),
       ),
@@ -2956,15 +3065,23 @@
     }
     const hint = hintModal();
     if (hint) root.appendChild(hint);
+    const intro = introModal();
+    if (intro) root.appendChild(intro);
+    const loginPrompt = loginPromptModal();
+    if (loginPrompt) root.appendChild(loginPrompt);
 
     // Lock body scroll while a modal is open so the page-behind doesn't
     // scroll on iOS / Android. `activity-detail` renders its own overlay
     // inside the screen (not via state flag) so we treat that screen as
     // a modal-open state too.
+    const introOpen = !state.introDismissed && state.session === 1 && state.screen === 'home';
+    const loginPromptOpen = !state.loginPromptDismissed && state.screen === 'login';
     const isModalOpen = !!(
       state.activeHintKey
       || state.pendingSymptom
       || state.screen === 'activity-detail'
+      || introOpen
+      || loginPromptOpen
     );
     applyModalScrollLock(isModalOpen);
 
@@ -3011,8 +3128,9 @@
     }
   });
 
-  // Global Esc handler — closes the hint modal, the question modal, or the
-  // account dropdown when any are open (in priority order).
+  // Global Esc handler — closes the hint modal, the question modal, the
+  // welcome intro popup, or the account dropdown when any are open (in
+  // priority order).
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (state.activeHintKey) {
@@ -3022,6 +3140,12 @@
       state.pendingSymptom = null;
       state.editingSymptomId = null;
       state.questionStep = 0;
+      render();
+    } else if (!state.introDismissed && state.session === 1 && state.screen === 'home') {
+      state.introDismissed = true;
+      render();
+    } else if (!state.loginPromptDismissed && state.screen === 'login') {
+      state.loginPromptDismissed = true;
       render();
     } else if (state.userMenuOpen) {
       state.userMenuOpen = false;

@@ -1726,24 +1726,44 @@ body.modal-open {
 }
 
 .hint-backdrop { z-index: 200; }
+
+/* =================================================================== */
+/* TUTORIAL POPUP — shared chassis for the welcome intro popup and the   */
+/* per-step hint walkthrough modal. Blue border distinguishes these     */
+/* explanatory popups from the green `.modal-card` used by the question */
+/* (data-entry) modal. Each popup adds its own size + body layout       */
+/* class on top: `.intro-card` / `.hint-card`.                          */
+/* =================================================================== */
+.modal-card.tutorial-popup {
+  border: 3px solid var(--spots-blue);
+  padding: 22px 26px 20px;
+  position: relative;
+}
+.tutorial-popup > h2 {
+  margin: 0 0 4px;
+  font-family: var(--font-headings);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+  text-align: center;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.tutorial-popup-sub {
+  text-align: center;
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--spots-text-muted);
+}
+.tutorial-popup-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
 .hint-card {
   width: 600px;
   max-width: 100%;
-  border-color: var(--spots-blue);
-  position: relative;
-  padding-top: 18px;
-}
-.hint-card h2 {
-  border-bottom: none;
-  padding-bottom: 4px;
-  font-size: 20px;
-  color: var(--spots-blue-dark);
-}
-.hint-card .hint-sub {
-  text-align: center;
-  margin: 0 0 14px;
-  font-size: 13px;
-  color: var(--spots-text-muted);
 }
 .hint-close {
   position: absolute;
@@ -1763,11 +1783,6 @@ body.modal-open {
   justify-content: center;
 }
 .hint-close:hover { background: #e3e7ee; }
-.hint-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-}
 
 /* The animated stage — a framed mini "viewport" containing two screens
  * (home + search) that crossfade, plus an absolutely positioned cursor. */
@@ -4561,3 +4576,95 @@ select:focus-visible,
 /* Disable iOS's default gray tap highlight on body-part groups so our
    own `:active` flash isn't doubled-up. */
 .body-svg .body-part { -webkit-tap-highlight-color: transparent; }
+
+/* =================================================================== */
+/* INTRO POPUP — orientation modal shown on first home render in        */
+/* session 1 (introModal in app.js). Calls out the tutorial-progress    */
+/* button and the per-step ? hint buttons. Uses the shared              */
+/* `.tutorial-popup` chassis above for chrome.                          */
+/* =================================================================== */
+.intro-backdrop { z-index: 200; }
+.intro-card {
+  width: 520px;
+  max-width: calc(100vw - 32px);
+  text-align: left;
+}
+.intro-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+.intro-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.intro-row p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--spots-gray-900);
+  flex: 1;
+  min-width: 0;
+}
+/* Mini-dock illustration — visually mirrors `.tutorial-dock-btn` chrome. */
+.intro-dock-mini {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(6,83,149,0.18);
+}
+.intro-dock-ring svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+.intro-dock-ring circle:first-child { stroke: var(--spots-border); }
+.intro-dock-ring circle:last-child  { stroke: var(--spots-blue); }
+.intro-dock-cap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--spots-blue-welcome);
+}
+.intro-dock-cap svg { width: 24px; height: 24px; }
+/* Hint badge — visually mirrors `.tdp-hint-btn`. */
+.intro-hint-badge {
+  flex: 0 0 60px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--spots-blue);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 28px;
+  font-family: var(--font-headings);
+  box-shadow: 0 4px 14px rgba(6,83,149,0.18);
+}
+
+/* =================================================================== */
+/* LOGIN PROMPT POPUP — shown on the session-2 login screen to explain  */
+/* the user needs to sign back in (loginPromptModal in app.js). Reuses  */
+/* the shared `.tutorial-popup` chassis.                                 */
+/* =================================================================== */
+.login-prompt-card {
+  width: 460px;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+}
+.login-prompt-body {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--spots-gray-900);
+}
