@@ -1,5 +1,5 @@
-// SPOTS desktop renderer — single-file SPA mirroring the Figma layout.
-// Flow: welcome → home → (past-problems | body-parts | activities | feelings | search | report)
+// SPOTS web renderer — single-file SPA mirroring the Figma layout.
+// Flow: welcome → home → (past-problems | body-parts | activities | feelings | search)
 //      symptoms picked → modal "question focus" (frequency/severity/interference;
 //      feelings use only frequency/severity — see `questionIdsForSymptom`).
 // Symptoms in the Problem Station can be clicked to re-open the modal in
@@ -13,8 +13,8 @@
 
   const state = {
     // 'en' | 'es'. Wired to the footer language toggle. Production fetches
-    // Spanish from REDCap; the tutorial ships hand-authored Spanish inline
-    // via the `t(en, es)` helper and `labelEs` fields on data items.
+    // Spanish from REDCap; the tutorial loads Spanish from `translations.csv`
+    // at init via `loadTranslations()` and reads it through `t(en)`.
     language: 'en',
     screen: 'welcome',
     selected: [],
@@ -388,6 +388,10 @@
     return fetch('./translations.csv', { cache: 'no-cache' })
       .then(r => r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)))
       .then(text => {
+        // Strip UTF-8 BOM if present — Excel and some editors add one when
+        // saving CSV, which would corrupt the first header column name and
+        // break en/es column detection.
+        if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
         const rows = parseCsv(text);
         // First row is header. Find column indexes by name so column order can
         // be reordered in the spreadsheet without breaking the runtime.
@@ -622,7 +626,11 @@
         el('button', { class: 'theme-toggle', title: t('Toggle theme'),
           html: '<svg viewBox="0 0 512 512" aria-hidden="true"><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/></svg>',
         }),
-        el('div', { class: 'lang-toggle' },
+        el('div', {
+          class: 'lang-toggle',
+          role: 'group',
+          'aria-label': t('Language'),
+        },
           el('button', {
             class: state.language === 'en' ? 'is-active' : '',
             'aria-pressed': state.language === 'en' ? 'true' : 'false',
@@ -1699,7 +1707,7 @@
               el('div', { class: 'hint-bp-detail-list' },
                 el('div', { class: 'hint-bp-detail-label' }),
                 el('div', { class: 'hint-bp-symptom-row concrete hint-bp-symptom-target' },
-                  el('span', { class: 'hint-bp-symptom-name' }, 'Foot pain'),
+                  el('span', { class: 'hint-bp-symptom-name' }, tSymptom('Foot pain')),
                   el('span', { class: 'hint-bp-check' }),
                   el('div', { class: 'hint-target hint-bp-target-symptom' }),
                 ),
@@ -1753,11 +1761,11 @@
             // (top label + real Activities-Final/Sleeping.jpg illustration
             // filling most of the card).
             el('div', { class: 'hint-act-card concrete' },
-              el('div', { class: 'hint-act-card-label' }, 'Sleeping'),
+              el('div', { class: 'hint-act-card-label' }, t('Sleeping')),
               el('img', {
                 class: 'hint-act-card-thumb',
                 src: './assets/Activities-Final/Sleeping.jpg',
-                alt: 'Sleeping',
+                alt: '',
               }),
               el('div', { class: 'hint-target hint-act-target-sleep' }),
             ),
@@ -1779,7 +1787,7 @@
         hintMiniHeader('activities'),
         el('div', { class: 'hint-act-body dim' }),
         el('div', { class: 'hint-act-modal' },
-          el('div', { class: 'hint-act-modal-title' }, 'Sleeping'),
+          el('div', { class: 'hint-act-modal-title' }, t('Sleeping')),
           el('img', {
             class: 'hint-act-modal-image',
             src: './assets/Activities-Final/Sleeping.jpg',
@@ -1796,7 +1804,7 @@
             ),
             // 2nd row — Fatigue (concrete, the cursor lands here)
             el('div', { class: 'hint-act-symptom-row concrete hint-act-symptom-target' },
-              el('span', { class: 'hint-act-symptom-name' }, 'Fatigue'),
+              el('span', { class: 'hint-act-symptom-name' }, tSymptom('Fatigue')),
               el('span', { class: 'hint-act-check' }),
               el('div', { class: 'hint-target hint-act-target-symptom' }),
             ),
@@ -1844,11 +1852,11 @@
             // for "Worried or nervous feelings"; see data.js feelings list)
             // fills the bulk of the card.
             el('div', { class: 'hint-feel-card concrete' },
-              el('div', { class: 'hint-feel-card-label' }, 'Worried'),
+              el('div', { class: 'hint-feel-card-label' }, t('Worried')),
               el('img', {
                 class: 'hint-feel-card-thumb',
                 src: './assets/Feelings-Final/Anxiety.jpg',
-                alt: 'Worried',
+                alt: '',
               }),
               el('div', { class: 'hint-target hint-feel-target-worried' }),
             ),
@@ -1878,7 +1886,7 @@
         hintMiniHeader('feelings'),
         el('div', { class: 'hint-feel-body dim' }),
         el('div', { class: 'hint-feel-modal' },
-          el('div', { class: 'hint-feel-modal-title' }, 'Worried'),
+          el('div', { class: 'hint-feel-modal-title' }, t('Worried')),
           el('img', {
             class: 'hint-feel-modal-image',
             src: './assets/Feelings-Final/Anxiety.jpg',
@@ -1892,7 +1900,7 @@
             ),
             // Row 1 — concrete pick (Worried or nervous feelings)
             el('div', { class: 'hint-act-symptom-row concrete hint-feel-symptom-target' },
-              el('span', { class: 'hint-act-symptom-name' }, 'Worried or nervous feelings'),
+              el('span', { class: 'hint-act-symptom-name' }, tSymptom('Worried or nervous feelings')),
               el('span', { class: 'hint-act-check' }),
               el('div', { class: 'hint-target hint-feel-target-symptom' }),
             ),
@@ -1933,8 +1941,8 @@
             el('div', { class: 'hint-pp-row concrete' },
               el('span', { class: 'hint-pp-checkbox' }),
               el('div', { class: 'hint-pp-info' },
-                el('span', { class: 'hint-pp-name' }, 'Headache'),
-                el('span', { class: 'hint-pp-date' }, 'Reported recently'),
+                el('span', { class: 'hint-pp-name' }, tSymptom('Headache')),
+                el('span', { class: 'hint-pp-date' }, t('Reported recently')),
               ),
               el('div', { class: 'hint-pp-row-dots' },
                 el('span', { class: 'hint-pp-row-dot' }),
@@ -1975,7 +1983,7 @@
         hintMiniHeader('past-problems'),
         el('div', { class: 'hint-pp-body dim' }),
         el('div', { class: 'hint-pp-modal' },
-          el('div', { class: 'hint-pp-modal-title' }, 'Headache'),
+          el('div', { class: 'hint-pp-modal-title' }, tSymptom('Headache')),
           el('div', { class: 'hint-pp-modal-prompt' }),
           el('div', { class: 'hint-pp-modal-options' },
             el('div', { class: 'hint-pp-modal-option' },
@@ -2042,10 +2050,10 @@
               ),
             ),
             el('div', { class: 'hint-mini-card hint-edit-station' },
-              el('div', { class: 'hint-edit-station-title' }, 'Problem Station'),
+              el('div', { class: 'hint-edit-station-title' }, t('Problem Station')),
               el('div', { class: 'hint-edit-station-rows' },
                 el('div', { class: 'hint-edit-ps-row concrete' },
-                  el('span', { class: 'hint-edit-ps-name' }, 'Headache'),
+                  el('span', { class: 'hint-edit-ps-name' }, tSymptom('Headache')),
                   el('span', { class: 'hint-edit-ps-dots' },
                     el('span', { class: 'hint-edit-ps-dot is-on' }),
                     el('span', { class: 'hint-edit-ps-dot' }),
@@ -2076,7 +2084,7 @@
         hintMiniHeader(null),
         el('div', { class: 'hint-mini-body dim' }),
         el('div', { class: 'hint-edit-modal' },
-          el('div', { class: 'hint-edit-modal-title' }, 'Headache'),
+          el('div', { class: 'hint-edit-modal-title' }, tSymptom('Headache')),
           el('div', { class: 'hint-edit-modal-prompt' }),
           el('div', { class: 'hint-edit-modal-options' },
             el('div', { class: 'hint-edit-modal-option' }),
@@ -2133,7 +2141,7 @@
               ),
             ),
             el('div', { class: 'hint-mini-card hint-edit-station' },
-              el('div', { class: 'hint-edit-station-title' }, 'Problem Station'),
+              el('div', { class: 'hint-edit-station-title' }, t('Problem Station')),
               el('div', { class: 'hint-edit-station-rows' },
                 // Wrap the concrete row in a collapse-only container. The
                 // wrapper animates `max-height` + `margin-bottom` to nothing
@@ -2143,7 +2151,7 @@
                 // border as it shrank.
                 el('div', { class: 'hint-del-row-wrap' },
                   el('div', { class: 'hint-edit-ps-row concrete' },
-                    el('span', { class: 'hint-edit-ps-name' }, 'Headache'),
+                    el('span', { class: 'hint-edit-ps-name' }, tSymptom('Headache')),
                     el('span', { class: 'hint-del-ps-right' },
                       el('span', { class: 'hint-edit-ps-dots' },
                         el('span', { class: 'hint-edit-ps-dot is-on' }),
@@ -2157,7 +2165,7 @@
                 ),
                 // Empty-state placeholder fades IN once the wrapper has
                 // collapsed — gives the user a clear "deleted" confirmation.
-                el('div', { class: 'hint-del-ps-empty' }, 'You have not reported any problems yet.'),
+                el('div', { class: 'hint-del-ps-empty' }, t('You have not reported any problems yet.')),
               ),
             ),
           ),
@@ -2185,12 +2193,12 @@
     const dropdown = el('div', { class: 'hint-comp-dropdown' },
       el('div', { class: 'hint-comp-arrow' }),
       el('div', { class: 'hint-comp-info' },
-        el('div', { class: 'hint-comp-label' }, 'Logged in as:'),
-        el('div', { class: 'hint-comp-value' }, 'User'),
+        el('div', { class: 'hint-comp-label' }, t('Logged in as:')),
+        el('div', { class: 'hint-comp-value' }, t('User')),
       ),
       el('div', { class: 'hint-comp-divider' }),
       el('div', { class: 'hint-comp-logout' },
-        'Logout',
+        t('Logout'),
         // Pulse target — animated via CSS so the demo lines up with the
         // cursor's click moment without any JS scheduling.
         el('div', { class: 'hint-target hint-comp-target-logout' }),
@@ -2321,7 +2329,7 @@
             ),
             el('div', { class: 'hint-search-results' },
               el('div', { class: 'hint-search-row hint-search-row-1 hint-result-real' },
-                el('span', { class: 'hint-result-name' }, 'Headache'),
+                el('span', { class: 'hint-result-name' }, tSymptom('Headache')),
                 el('span', { class: 'hint-row-chev' }, '›'),
                 el('div', { class: 'hint-target hint-target-row' }),
               ),
@@ -2426,6 +2434,12 @@
     const step = state.questionStep;
     const qid = stepIds[step];
     const q = D.ratingQuestions.find(rq => rq.id === qid);
+    // Defensive: if a stepId is somehow not in `D.ratingQuestions` (could only
+    // happen via a data mismatch), bail rather than crash on `q.id`.
+    if (!q) {
+      console.warn('questionModal: unknown question id', qid);
+      return null;
+    }
     const current = sym.answers[q.id];
     const isEditMode = !!state.editingSymptomId;
     const isLastStep = step + 1 === totalSteps;
@@ -2636,8 +2650,12 @@
         ),
         // Main login card
         el('div', { class: 'login-card' },
-          el('h2', { class: 'login-title' }, t('Sign In')),
-          el('form', { class: 'login-form', onsubmit: submit },
+          el('h1', { class: 'login-title', id: 'login-title' }, t('Sign In')),
+          el('form', {
+            class: 'login-form',
+            'aria-labelledby': 'login-title',
+            onsubmit: submit,
+          },
             el('input', {
               class: 'login-input',
               type: 'text',
@@ -2797,9 +2815,17 @@
       // newly-created container hits this cached promise and gets the same
       // text — no extra request, no race.
       if (!bodySvgCache[src]) {
-        bodySvgCache[src] = fetch(src)
+        const p = fetch(src)
           .then(r => r.ok ? r.text() : Promise.reject(new Error('HTTP ' + r.status)))
-          .catch(err => { console.warn('body svg fetch failed', src, err); return ''; });
+          .catch(err => {
+            // Don't lock the failure into the cache — drop it so a subsequent
+            // render gets a clean retry. Otherwise one network hiccup would
+            // leave the body figure permanently broken for the session.
+            console.warn('body svg fetch failed', src, err);
+            if (bodySvgCache[src] === p) delete bodySvgCache[src];
+            return '';
+          });
+        bodySvgCache[src] = p;
       }
       bodySvgCache[src].then(text => {
         // Skip if `render()` recreated the DOM before the fetch resolved —
@@ -2872,6 +2898,31 @@
   }
 
   // ----------------------------- router -----------------------------
+  // Tracks whether the previous render had a modal open. Used to fire the
+  // scroll-preserve/restore exactly once per modal-open / modal-close
+  // transition (not every render — re-renders during modal-open shouldn't
+  // re-capture the scroll position).
+  let lastModalOpen = false;
+
+  function applyModalScrollLock(isOpen) {
+    if (isOpen && !lastModalOpen) {
+      // Modal just opened — capture current scroll so we can restore it.
+      const y = window.scrollY || window.pageYOffset || 0;
+      document.body.style.setProperty('--scroll-y', `-${y}px`);
+      document.body.dataset.scrollY = String(y);
+      document.body.classList.add('modal-open');
+    } else if (!isOpen && lastModalOpen) {
+      // Modal closed — restore scroll. Read y BEFORE removing the class,
+      // since clearing `position: fixed` snaps the page to top on iOS.
+      const y = parseInt(document.body.dataset.scrollY || '0', 10);
+      document.body.classList.remove('modal-open');
+      document.body.style.removeProperty('--scroll-y');
+      delete document.body.dataset.scrollY;
+      window.scrollTo(0, y);
+    }
+    lastModalOpen = isOpen;
+  }
+
   function render() {
     root.innerHTML = '';
     let view;
@@ -2897,14 +2948,26 @@
     if (modal) root.appendChild(modal);
     // Floating tutorial-progress dock — present on every interactive screen.
     // Hidden on welcome (pre-session), login (logged out), welcome-back
-    // (session 2 intro), and done (post-session) where progress tracking
-    // isn't meaningful.
+    // (session 2 intro), and tutorial-complete (post-session) where progress
+    // tracking isn't meaningful.
     const hideDockOn = new Set(['welcome', 'welcome-back', 'login', 'tutorial-complete']);
     if (!hideDockOn.has(state.screen)) {
       root.appendChild(tutorialDock());
     }
     const hint = hintModal();
     if (hint) root.appendChild(hint);
+
+    // Lock body scroll while a modal is open so the page-behind doesn't
+    // scroll on iOS / Android. `activity-detail` renders its own overlay
+    // inside the screen (not via state flag) so we treat that screen as
+    // a modal-open state too.
+    const isModalOpen = !!(
+      state.activeHintKey
+      || state.pendingSymptom
+      || state.screen === 'activity-detail'
+    );
+    applyModalScrollLock(isModalOpen);
+
     loadAndWireBodySvgs();
     // Search input loses focus across re-renders (every keystroke triggers
     // render → DOM rebuild → input recreated). Restore focus + put the caret

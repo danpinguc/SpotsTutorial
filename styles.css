@@ -85,7 +85,29 @@ body {
 button { font-family: inherit; cursor: pointer; }
 img { display: block; }
 
-#app { min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+#app {
+  /* `100dvh` is the dynamic viewport height — accounts for the iOS Safari
+     URL bar collapsing. `100vh` is the fallback for browsers that don't
+     support `dvh` (iOS &lt; 15.4). */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Body lock applied during a modal-open render — see render() in app.js.
+   Stops the page-behind from scrolling under question/hint/activity modals
+   on iOS (and elsewhere). `--scroll-y` is set in JS to restore position on
+   close. */
+body.modal-open {
+  position: fixed;
+  inset: 0 0 auto 0;
+  width: 100%;
+  overflow: hidden;
+  touch-action: none;
+  top: var(--scroll-y, 0);
+}
 
 /* =================================================================== */
 /* HEADER                                                               */
@@ -498,14 +520,6 @@ img { display: block; }
   display: block;
   margin: 0 auto;
 }
-.dash-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 22px;
-  align-items: start;
-}
-@media (max-width: 1000px) { .dash-grid { grid-template-columns: 1fr; } }
-
 /* Stack the Past Problems callout + the summary chart vertically in the left
  * column so the chart nests under the callout instead of running full-width.
  * 24px gap mirrors production's `space-y-6`. */
@@ -1274,6 +1288,7 @@ img { display: block; }
  * push the card off the viewport.                                         */
 .activity-modal {
   max-height: calc(100vh - 80px);
+  max-height: calc(100dvh - 80px);
   display: flex;
   flex-direction: column;
 }
@@ -1615,8 +1630,15 @@ img { display: block; }
   border-radius: 999px;
 }
 .site-footer .lang-toggle button.is-active {
-  background: var(--spots-blue-light);
+  /* WCAG AA needs ≥3:1 for UI text. spots-blue-light (#92CDF8) on white was
+     1.71:1 — failed. spots-blue (#065395) gives ~9.5:1. */
+  background: var(--spots-blue);
   color: white;
+}
+.site-footer .lang-toggle button:focus-visible {
+  outline: 3px solid var(--spots-blue-medium);
+  outline-offset: 2px;
+  border-radius: 999px;
 }
 .site-footer .copyright {
   text-align: center;
@@ -1664,10 +1686,6 @@ img { display: block; }
   transform: rotate(45deg);
 }
 
-.muted { color: var(--spots-text-muted); }
-.text-center { text-align: center; }
-.row { display: flex; gap: 12px; align-items: center; }
-.spacer { flex: 1; }
 
 /* =================================================================== */
 /* TUTORIAL HINT MODAL (animated walkthroughs)                          */
@@ -2695,10 +2713,6 @@ img.hint-mini-corner {
   font-family: var(--font-body);
   flex: 0 0 auto;
 }
-.hint-act-card-icon {
-  width: 28px; height: 28px;
-}
-.hint-act-card-icon svg { width: 100%; height: 100%; }
 /* Concrete-card illustration — fills the remaining card area below the
  * label, mirroring the real `.picker-card img` proportions (label small,
  * image dominant). */
@@ -2797,14 +2811,6 @@ img.hint-mini-corner {
   flex-shrink: 0;
   display: inline-block;
   margin-left: auto;
-}
-.hint-feel-check {
-  width: 18px; height: 18px;
-  border: 1.5px solid var(--spots-blue);
-  border-radius: 50%;
-  background: white;
-  flex-shrink: 0;
-  display: inline-block;
 }
 .hint-act-symptom-target {
   animation: hintActRowHighlight 10s ease-out infinite;
@@ -4146,6 +4152,7 @@ img.hint-mini-corner {
 .login-page-layout {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background: var(--spots-bg-light);
   display: flex;
@@ -4261,6 +4268,11 @@ img.hint-mini-corner {
 }
 .login-section .login-pw-toggle:hover {
   color: #374151;
+}
+.login-section .login-pw-toggle:focus-visible {
+  outline: 3px solid var(--spots-blue-medium);
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 .login-section .login-pw-toggle svg {
   width: 20px;
@@ -4471,7 +4483,7 @@ select:focus-visible,
   .site-main { padding: 10px 16px 24px; }
 
   /* Two-column layouts stack (already partially handled above 1000px) */
-  .two-col, .dash-grid { grid-template-columns: 1fr !important; }
+  .two-col { grid-template-columns: 1fr !important; }
 
   /* Picker grids tighten up */
   .picker-grid--activities,
@@ -4507,3 +4519,45 @@ select:focus-visible,
   .avatar-btn img { width: 48px; height: 48px; }
   .hint-stage { transform: scale(0.7); }
 }
+
+/* =================================================================== */
+/* TOUCH DEVICES — disable hover-driven transforms                       */
+/* iOS Safari fires :hover once on first tap and leaves it stuck until   */
+/* the user taps elsewhere. The translateY/scale lift effects look       */
+/* glitchy on touch. Color-only :hover changes are left alone — they    */
+/* look identical to the resting state and don't draw attention.        */
+/* =================================================================== */
+@media (hover: none) {
+  .problem-station .ps-card:hover,
+  .picker-card:hover,
+  .bp-row:hover,
+  .symptom-row:hover,
+  .pp-row:hover,
+  .search-pill-row:hover,
+  .search-add-card:hover,
+  .rating-btn:hover,
+  .btn-secondary:hover,
+  .btn-primary:hover,
+  .tdp-hint-btn:hover,
+  .um-logout:hover,
+  .um-logout.is-finish:hover,
+  .login-section .login-btn-primary:hover,
+  .login-section .login-btn-outline:hover {
+    transform: none;
+    box-shadow: var(--shadow-card);
+  }
+  .tutorial-dock-btn:hover {
+    transform: none;
+  }
+}
+
+/* Body-part tap feedback on touch devices — gives a brief teal flash
+   before the navigation fires. On hover-capable devices the existing
+   `:hover .highlighted` rule handles it; on touch we use `:active`. */
+.body-svg .body-part:active:not(:has(.body-part:active)) > .body-fill path {
+  fill: #C3E2E2;
+  transition: fill 0.1s;
+}
+/* Disable iOS's default gray tap highlight on body-part groups so our
+   own `:active` flash isn't doubled-up. */
+.body-svg .body-part { -webkit-tap-highlight-color: transparent; }
