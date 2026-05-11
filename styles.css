@@ -1,0 +1,4509 @@
+/* SPOTS Desktop — design tokens mirrored from spots-app-main/app/globals.css */
+
+/* Web fonts. Both are variable; one src per file covers all weights/italics. */
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('./assets/fonts/Nunito/Nunito-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('./assets/fonts/Nunito/Nunito-Italic-VariableFont_wght.ttf') format('truetype-variations');
+  font-weight: 200 1000;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --spots-blue: #065395;
+  --spots-blue-dark: #00224b;
+  --spots-blue-soft: #D4EDFF;
+  --spots-blue-xlight: #b4eafd;
+  --spots-blue-light: #92CDF8;
+  --spots-blue-medium: #62BDE4;
+  --spots-blue-welcome: #0786c1;
+
+  --spots-orange: #FF6900;        /* Past Problems */
+  --spots-teal:   #00BBA7;        /* Body Parts */
+  --spots-green:  #a1bd3e;        /* Activities */
+  --spots-feelings: #00BCFF;      /* Feelings */
+  --spots-red:    #f05e54;        /* Search */
+  --spots-report: #1e8a7e;        /* Report (darker teal) */
+
+  --spots-rating-none:        #d8edff;
+  --spots-rating-mild:        #92CDF8;
+  --spots-rating-moderate:    #62BDE4;
+  --spots-rating-severe:      #3572F6;
+  --spots-rating-very-severe: #065395;
+
+  --spots-text:        #1A1C20;
+  --spots-text-light:  #FFFFFF;
+  --spots-text-muted:  #56606e;
+  --spots-bg-light:    #ffffff;
+  --spots-bg-page:     #ffffff;
+  --spots-bg-light-gray: #f5f5f5;
+  --spots-yellow:      #fffbd2;
+  --spots-yellow-soft: #FEF9D8;
+  --spots-gray-300:    #d1d5db;
+  --spots-gray-700:    #364153;
+  --spots-gray-800:    #1e2939;
+  --spots-gray-900:    #101828;
+  --spots-border:      #e3e7ee;
+
+  --shadow-card: 0 2px 8px rgba(16,24,40,0.06);
+  --shadow-soft: 0 6px 18px rgba(16,24,40,0.08);
+
+  --font-headings: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:     'Nunito', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; min-height: 100%; }
+body {
+  font-family: var(--font-body);
+  color: var(--spots-text);
+  background: var(--spots-bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; cursor: pointer; }
+img { display: block; }
+
+#app { min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+
+/* =================================================================== */
+/* HEADER                                                               */
+/* =================================================================== */
+.site-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 14px 32px 8px 180px;
+  min-height: 130px;
+  gap: 16px;
+}
+
+/* Blue triangular curve in the corner with SPOTS logo (real Figma assets).
+   Layer order (bottom to top): confetti → curve → wordmark.
+   Curve is tight in the corner; confetti spills below + right of the curve. */
+.logo-corner {
+  position: absolute;
+  top: 0; left: 0;
+  width: 280px; height: 300px;
+  pointer-events: none;
+  overflow: visible;
+}
+.logo-corner .confetti {
+  position: absolute;
+  top: 38px; left: -22px;
+  width: 280px; height: auto;
+  z-index: 0;
+  opacity: 0.95;
+}
+.logo-corner .curve {
+  position: absolute;
+  top: 0; left: 0;
+  width: 154px; height: auto;
+  z-index: 1;
+  /* Re-enable clicks on the visible corner art — the parent has
+   * pointer-events:none so the surrounding bounding box isn't a hit target. */
+  pointer-events: auto;
+  cursor: pointer;
+}
+.logo-corner .word-logo {
+  position: absolute;
+  top: 30px; left: 20px;
+  width: 104px; height: auto;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.logo-corner:focus-visible {
+  outline: 2px solid var(--spots-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.logo-corner:hover .word-logo,
+.logo-corner:hover .curve {
+  filter: brightness(1.05);
+}
+
+/* Top nav with circular icon buttons */
+.top-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  z-index: 1;
+}
+.nav-item {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  flex: 0 0 auto;
+  min-width: 76px;
+}
+.nav-item .label { white-space: nowrap; }
+/* Real SVG icons already include the colored circle background */
+.nav-item img.nav-icon {
+  width: 84px; height: 84px;
+  object-fit: contain;
+  transition: transform 0.08s ease, filter 0.15s ease;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.10));
+}
+.nav-item:hover img.nav-icon { transform: translateY(-2px); filter: drop-shadow(0 6px 12px rgba(0,0,0,0.18)); }
+.nav-item.is-active img.nav-icon { transform: translateY(-1px); filter: drop-shadow(0 0 0 var(--spots-blue)) drop-shadow(0 6px 12px rgba(0,0,0,0.18)); }
+.nav-item .label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--spots-gray-900);
+}
+
+/* Right side: settings + avatar. Settings gear and avatar share the same
+ * 84px diameter — the gear's inner SVG scales accordingly. */
+.user-area {
+  display: flex; align-items: center; gap: 16px;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+.icon-btn {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: var(--spots-blue-medium);
+  color: white;
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+}
+.icon-btn svg {
+  width: 42px;
+  height: 42px;
+  display: block;
+}
+.avatar {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: var(--spots-blue-soft);
+  /* Lighter ring to match the Figma — the navy --spots-blue read too dark.
+   * --spots-blue-medium (#62BDE4) lines up with the cyan-blue in the spec. */
+  border: 4px solid var(--spots-blue-medium);
+  display: block;
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+}
+.avatar img {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 92%;
+  height: auto;
+  transform: translateX(-50%);
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* =================================================================== */
+/* MAIN CONTENT                                                          */
+/* =================================================================== */
+.site-main { flex: 1; padding: 12px 56px 36px; max-width: 1280px; width: 100%; margin: 0 auto; }
+.page-title {
+  text-align: center;
+  font-family: var(--font-headings);
+  font-weight: 900;
+  font-size: 34px;
+  color: var(--spots-gray-900);
+  margin: 14px 0 6px;
+}
+.page-subtitle {
+  text-align: center;
+  color: var(--spots-text-muted);
+  font-size: 15px;
+  margin: 0 0 28px;
+}
+
+/* Two-column with main content + Problem Station sidebar */
+.two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+/* =================================================================== */
+/* PROBLEM STATION SIDEBAR                                               */
+/* =================================================================== */
+/* Problem Station card. Production uses a 4px teal/cyan border
+ * (--spots-blue-navy = #68C5E6) with a 16px radius, a header section divided
+ * from the body by a 1px gray border, and a light-gray disclaimer footer
+ * with another 1px top border. The desktop tutorial build keeps the
+ * disclaimer-style "ps-note" inside the body (instead of in a separate
+ * footer strip) but adopts the same border/radius/header divider styling. */
+.problem-station {
+  background: white;
+  border: 4px solid #68C5E6; /* --spots-blue-navy in production */
+  border-radius: 16px;
+  padding: 0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.10), 0 2px 4px -2px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 16px;
+  overflow: hidden;
+}
+.problem-station h3 {
+  margin: 0 0 4px;
+  font-family: var(--font-headings);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--spots-gray-900);
+  padding: 16px 20px 0;
+}
+.problem-station .ps-sub {
+  color: var(--spots-gray-700);
+  font-size: 14px;
+  margin: 0;
+  padding: 0 20px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.problem-station .ps-list {
+  padding: 20px;
+  font-size: 13px;
+  color: var(--spots-gray-800);
+  min-height: 28px;
+}
+.problem-station .ps-empty {
+  color: var(--spots-text-muted);
+  font-size: 13px;
+}
+
+/* Clickable Problem Station rows. Each is a white card with a subtle gray
+ * border that the user clicks to re-open the question modal in edit mode.
+ * Trash icon at far right removes the symptom (stops propagation so it
+ * doesn't trigger the row's edit click). */
+.problem-station .ps-rows {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.problem-station .ps-card {
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 11px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+  outline: none;
+}
+.problem-station .ps-card:hover {
+  border-color: var(--spots-blue-medium);
+  box-shadow: 0 4px 12px rgba(6,83,149,0.10);
+  transform: translateY(-1px);
+}
+.problem-station .ps-card:focus-visible {
+  border-color: var(--spots-blue-medium);
+  box-shadow: 0 0 0 3px rgba(98,189,228,0.30);
+}
+.problem-station .ps-card-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.problem-station .ps-card-name {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--spots-gray-900);
+  line-height: 1.25;
+  /* Allow long names to wrap; the right-side actions stay on the same row. */
+  flex: 1;
+  min-width: 0;
+}
+.problem-station .ps-card-right {
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.problem-station .ps-card-sub {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--spots-text-muted);
+  line-height: 1.35;
+}
+.problem-station .ps-card-date {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--spots-text-muted);
+}
+.problem-station .ps-dots {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.problem-station .ps-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--spots-gray-300);
+  display: inline-block;
+}
+.problem-station .ps-dot.is-on {
+  background: var(--spots-green);
+}
+.problem-station .ps-trash {
+  background: transparent;
+  border: none;
+  padding: 4px;
+  border-radius: 6px;
+  color: var(--spots-red);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.12s ease, background 0.12s ease;
+}
+.problem-station .ps-trash:hover {
+  opacity: 1;
+  background: rgba(240,94,84,0.10);
+}
+.problem-station .ps-trash:focus-visible {
+  outline: 2px solid var(--spots-red);
+  outline-offset: 2px;
+}
+.problem-station .ps-note {
+  margin: 0;
+  background: #f9fafb; /* tailwind gray-50 */
+  border-top: 1px solid #f3f4f6;
+  border-radius: 0;
+  padding: 12px 20px;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.5;
+  text-align: center;
+}
+.btn-secondary {
+  background: white;
+  color: var(--spots-blue);
+  border: 1.5px solid var(--spots-blue);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 13px;
+}
+.btn-secondary:hover { background: var(--spots-blue-soft); }
+
+/* =================================================================== */
+/* WELCOME                                                               */
+/* =================================================================== */
+.welcome-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 28px;
+  position: relative;
+}
+.welcome-card {
+  background: white;
+  border-radius: 22px;
+  padding: 56px 64px;
+  max-width: 720px;
+  text-align: center;
+  box-shadow: 0 18px 60px rgba(6,83,149,0.18);
+  position: relative;
+  z-index: 1;
+}
+.welcome-greet {
+  color: var(--spots-text-muted);
+  font-size: 18px;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+.welcome-logo {
+  margin: 0 auto;
+  display: block;
+}
+.welcome-logo img {
+  width: 280px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.welcome-card .tagline {
+  font-family: var(--font-headings);
+  color: var(--spots-blue-dark);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 18px 0 10px;
+}
+.welcome-card .blurb {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--spots-gray-700);
+  margin: 0 0 32px;
+}
+.btn-primary {
+  background: var(--spots-blue-welcome);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 16px 38px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  box-shadow: 0 10px 24px rgba(7,134,193,0.35);
+  transition: transform 0.08s ease, box-shadow 0.15s ease;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(7,134,193,0.45); }
+.btn-primary:active { transform: translateY(1px); }
+
+/* Decorative dots scattered on the welcome screen */
+.welcome-wrap .deco-dot {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* =================================================================== */
+/* HOME / DASHBOARD                                                      */
+/* =================================================================== */
+.home-banner {
+  text-align: center;
+  margin: 6px 0 24px;
+}
+.home-banner .greet {
+  color: var(--spots-text);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.home-banner .home-logo img {
+  width: 215px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 1000px) { .dash-grid { grid-template-columns: 1fr; } }
+
+/* Stack the Past Problems callout + the summary chart vertically in the left
+ * column so the chart nests under the callout instead of running full-width.
+ * 24px gap mirrors production's `space-y-6`. */
+.dash-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Past Problems card. Production uses a 4px orange border, 16px radius, and
+ * a thin orange header strip; the body holds two stacked sections ("What's New"
+ * and "Happens a Lot") with a faint divider between them. */
+.dash-past {
+  border: 4px solid var(--spots-orange);
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.dash-past .dp-header {
+  background: var(--spots-orange);
+  color: white;
+  padding: 8px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 600;
+  font-family: var(--font-headings);
+  font-size: 16px;
+}
+.dash-past .dp-header-title { display: inline-flex; align-items: center; gap: 8px; }
+.dash-past .dp-header-icon { font-size: 16px; line-height: 1; }
+.dash-past .dp-header .view-all {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  opacity: 1;
+}
+.dash-past .dp-header .view-all:hover { opacity: 0.85; text-decoration: underline; }
+.dash-past .dp-body { padding: 16px; display: flex; flex-direction: column; gap: 22px; }
+.dash-past .dp-section { padding: 0; }
+.dash-past .dp-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 0;
+}
+.dash-past .dp-section-label {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+}
+.dash-past .dp-section-icon {
+  color: var(--spots-orange);
+  display: inline-flex; align-items: center;
+}
+.dash-past .dp-pills {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.dash-past .dp-pill {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--spots-bg-light-gray);
+  color: var(--spots-gray-800);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 16px;
+  gap: 12px;
+}
+.dash-past .dp-pill-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--spots-gray-800);
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dash-past .dp-pill-dots {
+  display: inline-flex; gap: 6px;
+  flex: 0 0 auto;
+}
+.dash-past .dp-pill-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--spots-gray-300);
+}
+.dash-past .dp-empty {
+  font-size: 14px;
+  color: var(--spots-text-muted);
+  padding: 6px 2px;
+}
+
+/* Summary chart card. Production uses a 4px green border + 16px radius and
+ * a 24px body padding, with the title centered and slightly larger than 16px. */
+.dash-summary {
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+}
+.dash-summary h3 {
+  margin: 0 0 24px;
+  font-family: var(--font-headings);
+  font-weight: 600;
+  text-align: center;
+  font-size: 20px;
+  color: var(--spots-gray-900);
+  line-height: 1.35;
+}
+.dash-summary .chart-frame {
+  width: 100%;
+  /* SVG keeps its viewBox aspect ratio; height scales with width. */
+}
+.dash-summary .chart-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dash-summary .chart-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 28px;
+  margin-top: 14px;
+  padding: 0 10px;
+}
+.dash-summary .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--spots-gray-900);
+  min-width: 0;
+}
+.dash-summary .legend-swatch {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+.dash-summary .legend-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dash-summary .view-full {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: var(--spots-blue);
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.dash-summary .view-full:hover { text-decoration: underline; color: #1e40af; }
+.dash-summary-empty {
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #4b5563;
+  margin: 8px auto;
+  max-width: 540px;
+  padding: 24px 8px;
+}
+
+/* =================================================================== */
+/* PICKER GRID (body parts list, activities, feelings)                   */
+/* =================================================================== */
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+/* Activities: explicit 3-column grid so 11 cards lay out 3-3-3-2. */
+.picker-grid--activities {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+/* Feelings: 4 columns; with 7 feelings the bottom row holds 3 cards. Cards
+ * are taller to accommodate the multi-line title at the top and the dots
+ * affordance at the bottom-right. */
+.picker-grid--feelings {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.picker-card {
+  background: white;
+  border: 2px solid var(--spots-green);
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--font-headings);
+  font-weight: 700;
+  color: var(--spots-gray-900);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.08s ease;
+}
+.picker-card .top-label {
+  font-size: 13px;
+  text-align: left;
+  padding: 4px 8px 0;
+  color: var(--spots-gray-900);
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+.picker-card img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--spots-bg-light-gray);
+}
+.picker-card:hover { transform: translateY(-2px); }
+.picker-card.is-selected {
+  background: var(--spots-blue-soft);
+  outline: 3px solid var(--spots-blue);
+  outline-offset: -2px;
+}
+.picker-card.feelings {
+  border: 1.5px solid var(--spots-blue-medium);
+  padding: 12px 12px 30px;
+  position: relative;
+}
+.picker-card.feelings .feelings-label {
+  font-family: var(--font-headings);
+  font-weight: 800;
+  font-size: 13.5px;
+  line-height: 1.3;
+  color: var(--spots-gray-900);
+  padding: 2px 2px 6px;
+  min-height: 36px;
+}
+.picker-card.feelings img {
+  height: 110px;
+}
+.picker-card.feelings .feelings-dots {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  display: flex;
+  gap: 4px;
+}
+.picker-card.feelings .feelings-dots span {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #b5bdc7;
+  display: inline-block;
+}
+.picker-card.body-parts { border-color: var(--spots-teal); }
+
+/* =================================================================== */
+/* BODY PARTS LAYOUT (figure on left, list on right)                     */
+/* =================================================================== */
+.bp-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 900px) { .bp-layout { grid-template-columns: 1fr; } }
+
+/* Column wrapper holds the figure card + the Show Back button below it */
+.bp-figure-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.bp-figure {
+  /* Half-tint: yellow column tracks the figure's right side (left of frame in
+   * front view, right of frame in back view). Implemented as a horizontal
+   * gradient so labels and figure sit on top.                              */
+  background: linear-gradient(to right,
+    var(--spots-yellow-soft) 0 50%,
+    #fff                     50% 100%);
+  border-radius: 14px;
+  padding: 14px 12px 12px;
+  width: 100%;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+.bp-figure.is-back {
+  background: linear-gradient(to right,
+    #fff                     0 50%,
+    var(--spots-yellow-soft) 50% 100%);
+}
+.bp-figure .figure-labels {
+  display: flex; justify-content: space-between;
+  width: 100%;
+  padding: 0 6px;
+  font-size: 13px;
+  color: var(--spots-gray-900);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.bp-figure .body-svg {
+  width: 100%;
+  max-width: 220px;
+  display: block;
+}
+.bp-figure .body-svg svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Interactive body hotspots — matches InteractiveBody.tsx behavior */
+.body-svg .body-part {
+  transition: filter 120ms ease;
+  outline: none;
+}
+.body-svg .body-part:focus-visible {
+  filter: drop-shadow(0 0 4px var(--spots-blue));
+}
+/* Highlight is driven by the JS-applied `.highlighted` class only. We avoid
+ * the CSS :hover selector here because CSS :hover matches ancestors of the
+ * hovered element, which would light up `Head` whenever the cursor was over
+ * an eye/nose/mouth (those groups are nested inside Head). mouseenter (used
+ * in JS) does not bubble, so only the actual leaf part gets the class.
+ *
+ * However, mouseenter does NOT fire again when the cursor moves from Head's
+ * face fill onto a nested Eye/Nose/Mouth — and Head's mouseleave does NOT
+ * fire either (cursor is still in Head's subtree). So Head keeps `.highlighted`
+ * while a child feature is hovered. We suppress Head's visual highlight via
+ * :not(:has(...)) when any descendant body-part is also highlighted, so the
+ * background head tint disappears the moment a facial feature lights up. */
+.body-svg .body-part.highlighted:not(:has(.body-part.highlighted)) {
+  /* The body SVG defines <filter id="glow"> for this exact purpose. */
+  filter: url(#glow);
+}
+.body-svg .body-part.highlighted:not(:has(.body-part.highlighted)) > .body-fill path {
+  fill: #C3E2E2; /* teal-soft tint, matches st15 in the body SVG palette */
+}
+
+/* Circular hit-zone for tiny parts (eyes, nose, mouth). The teal ring is
+ * visible at all times as a discoverability cue; the soft teal fill only
+ * appears while that specific zone is hovered. pointer-events:all makes the
+ * disc the hit target even though its fill is transparent.                */
+.body-svg .hotspot-zone {
+  fill: transparent;
+  pointer-events: all;
+  stroke: #50ACAB; /* spots-teal */
+  stroke-width: 1.5;
+  stroke-opacity: 0; /* hidden until cursor enters the Head region */
+  transition: fill 120ms ease, stroke-opacity 120ms ease;
+}
+.body-svg.head-hover .hotspot-zone {
+  stroke-opacity: 0.9;
+}
+.body-svg .body-part.highlighted > .hotspot-zone {
+  /* Direct child only, same reason as the body-fill rule above. */
+  fill: rgba(80, 172, 171, 0.28);
+}
+
+.show-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--spots-gray-900);
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+}
+.show-back-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+.show-back:hover .show-back-icon { transform: rotate(-15deg); transition: transform 120ms ease; }
+
+.bp-list-panel {
+  background: white;
+  border: 1.5px solid var(--spots-blue-light);
+  border-radius: 14px;
+  padding: 14px 14px 18px;
+  box-shadow: var(--shadow-card);
+  /* Match Figma: the list panel is taller than the figure but doesn't run the
+   * full height of the page. Internal scroll keeps the layout balanced.   */
+  max-height: 620px;
+  display: flex;
+  flex-direction: column;
+}
+.bp-list-panel .bp-list {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+/* Body Parts main list (no panel header) — thin divider sits above the rows
+ * in place of where "All Body Parts" used to be. */
+.bp-list-panel--no-header .bp-list {
+  border-top: 1px solid var(--spots-border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.bp-list-panel .panel-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 6px 12px;
+  border-bottom: 1px solid var(--spots-border);
+  margin-bottom: 12px;
+}
+.bp-list-panel .panel-title {
+  font-family: var(--font-headings);
+  font-weight: 800;
+  color: var(--spots-gray-900);
+  font-size: 18px;
+}
+.bp-list-panel .panel-link {
+  background: none;
+  border: none;
+  color: var(--spots-blue);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.bp-list { display: flex; flex-direction: column; gap: 10px; }
+.bp-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--spots-orange);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--spots-gray-900);
+}
+.bp-row:hover { background: #FFF5EE; }
+.bp-row .thumb {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--spots-bg-light-gray);
+  flex: 0 0 auto;
+}
+.bp-row .row-label { flex: 1; font-size: 14px; }
+.bp-row .chev { color: var(--spots-orange); font-weight: 800; }
+
+/* Body-part DETAIL panel */
+.bp-detail-figure {
+  width: 110px; height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+  background: var(--spots-bg-light-gray);
+}
+.go-to-skin {
+  display: block;
+  margin: 16px auto 18px;
+  background: white;
+  border: 1px solid var(--spots-border);
+  color: var(--spots-gray-900);
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+}
+
+.symptom-list {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.symptom-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border: 1.5px solid var(--spots-orange);
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--spots-gray-900);
+  font-size: 14.5px;
+}
+.symptom-row:hover { background: #FFF5EE; }
+.symptom-row.is-selected {
+  background: var(--spots-blue-soft);
+  border-color: var(--spots-blue);
+  outline: 2px solid var(--spots-blue);
+  outline-offset: -1px;
+}
+.symptom-row .check {
+  width: 22px; height: 22px;
+  border: 2px solid var(--spots-blue);
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: white;
+  color: white;
+  font-size: 13px;
+}
+.symptom-row.is-selected .check { background: var(--spots-blue); }
+
+/* =================================================================== */
+/* PAST PROBLEMS LIST (2-col)                                            */
+/* Production reference: app/(pages)/past-problems/page.tsx +            */
+/*   app/_components/common/ProblemStationStyleRow.tsx                   */
+/* =================================================================== */
+.past-problems-page .page-header {
+  text-align: center;
+  margin: 6px 0 24px;
+  padding: 0 16px;
+  max-width: none;
+}
+.past-problems-page .page-title {
+  font-size: 36px;
+  margin: 8px 0 12px;
+}
+.past-problems-page .page-subtitle {
+  font-size: 16px;
+  color: var(--spots-gray-700);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.pp-empty {
+  padding: 32px 16px;
+  text-align: center;
+}
+.pp-empty-text {
+  color: var(--spots-text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.pp-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+@media (max-width: 1100px) { .pp-list { grid-template-columns: 1fr; } }
+
+.pp-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--spots-blue-soft);
+  border-radius: 8px;
+  background: var(--spots-bg-light);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  outline: none;
+}
+.pp-row:hover {
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  border-color: var(--spots-border);
+  background: var(--spots-bg-light-gray);
+}
+.pp-row:focus-visible {
+  box-shadow: 0 0 0 3px var(--spots-blue-soft);
+  border-color: var(--spots-blue-medium);
+}
+.pp-row.is-selected {
+  border-color: var(--spots-blue-medium);
+  background: var(--spots-blue-soft);
+  box-shadow: 0 0 0 1px var(--spots-blue-medium) inset, 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.pp-row .pp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-right: 12px;
+}
+.pp-row .pp-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--spots-gray-900);
+  line-height: 1.3;
+}
+.pp-row .pp-subtext {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+.pp-row .pp-context,
+.pp-row .pp-date {
+  font-size: 12px;
+  color: var(--spots-text-muted);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pp-row .pp-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.pp-row .pp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D4D4D8; /* legacyDotColorsAllGrey — production uses this exact gray */
+  flex-shrink: 0;
+}
+.pp-row.is-selected .pp-dot {
+  background: var(--spots-blue-medium);
+}
+
+/* =================================================================== */
+/* SEARCH                                                                */
+/* =================================================================== */
+.search-page .search-label {
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  color: var(--spots-gray-900);
+  font-weight: 700;
+}
+.search-page .search-column { max-width: 720px; }
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  background: white;
+  border: 1.5px solid var(--spots-border);
+  border-radius: 999px;
+  padding: 4px 16px 4px 20px;
+  box-shadow: var(--shadow-card);
+  transition: border-color 0.12s ease;
+}
+.search-box:focus-within { border-color: var(--spots-blue-medium); }
+.search-box input {
+  flex: 1; border: none; outline: none;
+  font: inherit; font-size: 16px;
+  padding: 12px 4px;
+  background: transparent;
+  color: var(--spots-gray-900);
+}
+.search-box .search-clear {
+  background: transparent;
+  border: none;
+  color: var(--spots-text-muted);
+  font-size: 22px;
+  line-height: 1;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.search-box .search-clear:hover { background: var(--spots-bg-light-gray); color: var(--spots-gray-900); }
+.search-box .search-icon-svg {
+  width: 28px; height: 28px;
+  color: var(--spots-text-muted);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.search-box .search-icon-svg.is-subtle { width: 22px; height: 22px; color: #a5acb7; }
+
+.search-results-label {
+  margin: 22px 0 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--spots-gray-900);
+}
+.search-results-pills {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.search-pill-row {
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 14px 22px;
+  border: 1.5px solid var(--spots-orange);
+  border-radius: 999px;
+  background: white;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.search-pill-row:hover { background: #FFF5EE; }
+.search-pill-row:focus-visible {
+  outline: 2px solid var(--spots-blue);
+  outline-offset: 2px;
+}
+.search-pill-row.is-selected {
+  background: var(--spots-blue-soft);
+  border-color: var(--spots-blue);
+}
+.search-pill-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--spots-gray-900);
+}
+
+.search-no-matches {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--spots-text-muted);
+  text-align: center;
+}
+
+.search-add-block {
+  margin-top: 28px;
+}
+.search-add-caption {
+  font-size: 13.5px;
+  color: var(--spots-gray-800);
+  margin: 0 0 8px;
+}
+.search-add-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: white;
+  border: 2px dashed #c8cdd4;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.search-add-card:hover {
+  border-color: var(--spots-orange);
+  background: #FFF8F2;
+}
+.search-add-title {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--spots-gray-900);
+  margin-bottom: 4px;
+}
+.search-add-query {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--spots-orange);
+}
+
+/* =================================================================== */
+/* QUESTION FOCUS MODAL                                                  */
+/* =================================================================== */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(20, 27, 44, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.modal-card {
+  background: white;
+  border: 3px solid var(--spots-green);
+  border-radius: 18px;
+  padding: 22px 26px 22px;
+  width: 460px;
+  max-width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+}
+/* Activity-detail modal: scrollable internally so tall symptom lists don't
+ * push the card off the viewport.                                         */
+.activity-modal {
+  max-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+.activity-modal-image {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  margin: 0 auto 14px;
+  display: block;
+  border: 1px solid var(--spots-border);
+  border-radius: 8px;
+}
+.activity-modal .symptom-list {
+  overflow-y: auto;
+  padding-right: 4px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.activity-modal-actions {
+  text-align: right;
+  margin-top: 14px;
+}
+.modal-card h2 {
+  margin: 0 0 14px;
+  font-family: var(--font-headings);
+  font-weight: 800;
+  font-size: 18px;
+  text-align: center;
+  border-bottom: 1px solid var(--spots-border);
+  padding-bottom: 12px;
+  color: var(--spots-gray-900);
+}
+.modal-card .q-prompt {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--spots-gray-900);
+  margin: 4px 0 14px;
+  line-height: 1.45;
+}
+.rating-col { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+.rating-btn {
+  border: none;
+  background: var(--spots-rating-none);
+  color: var(--spots-blue-dark);
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-weight: 800;
+  font-size: 14px;
+  width: 240px;
+  margin: 0 auto;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: filter 0.1s ease, transform 0.05s ease;
+}
+.rating-btn[data-level="0"] { background: #c5e6ff; color: var(--spots-blue-dark); }
+.rating-btn[data-level="1"] { background: #6fc7ff; color: white; }
+.rating-btn[data-level="2"] { background: #2d9cff; color: white; }
+.rating-btn[data-level="3"] { background: #1a73e8; color: white; }
+.rating-btn:hover { filter: brightness(1.05); }
+.rating-btn.is-selected {
+  outline: 3px solid var(--spots-blue-dark);
+  outline-offset: 2px;
+  transform: translateY(-1px);
+}
+.progress-dots {
+  display: flex; gap: 8px; justify-content: center;
+  margin: 18px 0 14px;
+}
+.progress-dots .pd {
+  height: 6px; width: 64px;
+  border-radius: 4px;
+  background: #cfe4f7;
+}
+.progress-dots .pd.is-active { background: var(--spots-blue); }
+.modal-card .modal-actions {
+  display: flex; justify-content: space-between; gap: 10px;
+}
+.btn-pill {
+  background: #c5e6ff;
+  border: none;
+  color: var(--spots-blue-dark);
+  border-radius: 999px;
+  padding: 10px 26px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+.btn-pill.primary { background: var(--spots-blue-welcome); color: white; }
+.btn-pill[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* =================================================================== */
+/* TUTORIAL PROGRESS DOCK                                                */
+/* Floating button + popup — sits top-right under the avatar; Apple Dock  */
+/* style hover magnification.                                            */
+/* =================================================================== */
+.tutorial-dock {
+  position: fixed;
+  /* Sits below the header avatar (header is ~110px tall on this app). */
+  top: 130px;
+  right: 28px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.tutorial-dock-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 1; /* below the dock button (which sits in the same .tutorial-dock stack) */
+}
+/* SPOTS-themed tutorial dock — circular progress ring around a soft
+ * gradient core with confetti dot decorations. The ring fills clockwise
+ * as the user completes checklist items. */
+.tutorial-dock-btn {
+  position: relative;
+  z-index: 2;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: white;
+  display: block;
+  padding: 0;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 16px rgba(6, 83, 149, 0.28));
+  /* Apple-Dock-style magnification — overshoot easing for the bounce. */
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 220ms ease;
+}
+.tutorial-dock-btn:hover {
+  transform: scale(1.14);
+  filter: drop-shadow(0 10px 22px rgba(6, 83, 149, 0.36));
+}
+.tutorial-dock-btn.is-open {
+  transform: scale(1.08);
+}
+/* Progress ring — full track + completion arc. */
+.tutorial-dock-btn .dock-ring-wrap {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+.tutorial-dock-btn .dock-ring-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.tutorial-dock-btn .ring-track {
+  stroke: rgba(98, 189, 228, 0.22); /* soft blue-medium fill */
+}
+.tutorial-dock-btn .ring-progress {
+  stroke: var(--spots-teal);
+  transition: stroke-dashoffset 360ms ease;
+}
+/* Inner solid core — flat blue, matching the SPOTS palette's flat-color
+ * identity (no gradients). */
+.tutorial-dock-btn .dock-core {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--spots-blue-medium);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  color: white;
+}
+.tutorial-dock-btn .dock-icon {
+  display: flex;
+  width: 22px;
+  height: 22px;
+}
+.tutorial-dock-btn .dock-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.tutorial-dock-btn .dock-count {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  line-height: 1;
+  opacity: 0.92;
+}
+.tutorial-dock-panel {
+  position: relative;
+  z-index: 2;
+  width: 280px;
+  background: white;
+  border: 2px solid var(--spots-blue-medium);
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(6, 83, 149, 0.20);
+  padding: 14px 16px 14px;
+  /* Pop-in animation when the panel appears. */
+  transform-origin: top right;
+  animation: dock-pop 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes dock-pop {
+  0%   { opacity: 0; transform: scale(0.85) translateY(-6px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.tutorial-dock-panel .tdp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.tutorial-dock-panel .tdp-title {
+  font-family: var(--font-headings);
+  font-weight: 800;
+  font-size: 12.5px;
+  color: var(--spots-gray-900);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.tutorial-dock-panel .tdp-count {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--spots-blue);
+}
+.tutorial-dock-panel .tdp-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.tutorial-dock-panel .tdp-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--spots-text-muted);
+  line-height: 1.3;
+}
+.tutorial-dock-panel .tdp-item.is-done {
+  color: var(--spots-gray-900);
+  font-weight: 700;
+}
+.tutorial-dock-panel .tdp-item.is-done .progress-check {
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+.tutorial-dock-panel .tdp-label { flex: 1; }
+
+/* Shared progress chrome (used by the tutorial dock; was also used by an
+   earlier in-sidebar widget that has been removed). */
+.progress-bar {
+  height: 8px;
+  width: 100%;
+  background: white;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--spots-border);
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--spots-blue-medium), var(--spots-blue));
+  transition: width 0.25s ease;
+}
+.progress-check {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: white;
+  border: 1.5px solid #c8cdd4;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  color: white;
+  flex: 0 0 auto;
+}
+
+/* =================================================================== */
+/* FOOTER                                                                */
+/* =================================================================== */
+.site-footer {
+  border-top: 1px solid var(--spots-border);
+  padding: 30px 140px 20px;
+  background: white;
+  position: relative;
+  margin-top: 24px;
+}
+.site-footer .footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  gap: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.site-footer h4 {
+  font-family: var(--font-headings);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--spots-gray-900);
+  margin: 0 0 8px;
+}
+.site-footer p, .site-footer a { color: var(--spots-gray-700); font-size: 13px; line-height: 1.5; margin: 0; }
+.site-footer a { color: var(--spots-blue); text-decoration: none; display: block; padding: 2px 0; cursor: pointer; }
+.site-footer a:hover { text-decoration: underline; }
+.site-footer .uth-logo {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.site-footer .uth-logo img {
+  width: 140px;
+  height: auto;
+}
+.site-footer .lang-row {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  max-width: 1100px; margin: 22px auto 8px;
+}
+.site-footer .lang-row .gear { font-size: 18px; color: var(--spots-gray-700); }
+.site-footer .lang-toggle {
+  display: inline-flex;
+  background: white;
+  border: 1.5px solid var(--spots-blue-light);
+  border-radius: 999px;
+  overflow: hidden;
+  padding: 2px;
+  gap: 2px;
+}
+.site-footer .lang-toggle button {
+  background: transparent;
+  border: none;
+  padding: 6px 22px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--spots-blue);
+  cursor: pointer;
+  font-family: var(--font-body);
+  border-radius: 999px;
+}
+.site-footer .lang-toggle button.is-active {
+  background: var(--spots-blue-light);
+  color: white;
+}
+.site-footer .copyright {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--spots-text-muted);
+  max-width: 1100px;
+  margin: 6px auto 0;
+}
+/* Footer confetti — Spot_Assets-02 is already oriented for bottom-right corner
+   in the original SPOTS app (Footer.tsx uses it with no transform). */
+.site-footer .footer-grid,
+.site-footer .lang-row,
+.site-footer .copyright { position: relative; z-index: 1; }
+.site-footer .footer-confetti {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 150px; height: 140px;
+  pointer-events: none;
+  z-index: 0;
+}
+.site-footer .footer-confetti img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  object-position: right bottom;
+}
+
+/* Theme toggle (sun icon) next to language pills in the footer */
+.site-footer .theme-toggle {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #b9c0cb;
+  cursor: pointer;
+}
+.site-footer .theme-toggle svg {
+  width: 22px; height: 22px;
+  fill: currentColor;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.site-footer .theme-toggle:hover svg {
+  color: var(--spots-orange);
+  transform: rotate(45deg);
+}
+
+.muted { color: var(--spots-text-muted); }
+.text-center { text-align: center; }
+.row { display: flex; gap: 12px; align-items: center; }
+.spacer { flex: 1; }
+
+/* =================================================================== */
+/* TUTORIAL HINT MODAL (animated walkthroughs)                          */
+/* =================================================================== */
+.tdp-hint-btn {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--spots-blue);
+  background: white;
+  color: var(--spots-blue);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease, transform 0.08s ease;
+}
+.tdp-hint-btn:hover {
+  background: var(--spots-blue);
+  color: white;
+  transform: scale(1.08);
+}
+.tdp-hint-btn.is-disabled {
+  opacity: 0.45;
+  cursor: default;
+  border-color: var(--spots-border);
+  color: var(--spots-text-muted);
+}
+.tdp-hint-btn.is-disabled:hover {
+  background: white;
+  color: var(--spots-text-muted);
+  transform: none;
+}
+
+.hint-backdrop { z-index: 200; }
+.hint-card {
+  width: 600px;
+  max-width: 100%;
+  border-color: var(--spots-blue);
+  position: relative;
+  padding-top: 18px;
+}
+.hint-card h2 {
+  border-bottom: none;
+  padding-bottom: 4px;
+  font-size: 20px;
+  color: var(--spots-blue-dark);
+}
+.hint-card .hint-sub {
+  text-align: center;
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--spots-text-muted);
+}
+.hint-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--spots-bg-light-gray);
+  color: var(--spots-gray-900);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.hint-close:hover { background: #e3e7ee; }
+.hint-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* The animated stage — a framed mini "viewport" containing two screens
+ * (home + search) that crossfade, plus an absolutely positioned cursor. */
+.hint-stage {
+  position: relative;
+  width: 540px;
+  height: 360px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(16,24,40,0.08);
+  font-family: var(--font-body);
+}
+.hint-stage-empty {
+  display: flex; align-items: center; justify-content: center;
+}
+.hint-empty {
+  color: var(--spots-text-muted);
+  font-size: 14px;
+}
+
+.hint-screen {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  opacity: 0;
+  background: white;
+}
+
+/* Mini header — abstract palette of nav dots so the eye is drawn to the
+ * single concrete icon (Search). White background like the real site. */
+.hint-mini-header {
+  position: relative;
+  height: 60px;
+  background: white;
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 56px;
+  border-bottom: 1px solid var(--spots-border);
+}
+/* Use the real Spots-curve.svg so the corner reads with the actual wavy
+ * SPOTS swoop instead of a hard diagonal cut. */
+img.hint-mini-corner {
+  position: absolute;
+  top: 0; left: 0;
+  width: 56px;
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+}
+.hint-mini-nav {
+  flex: 1;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+/* Abstract nav dots — match the per-icon palette without revealing the
+ * actual icon artwork. */
+.hint-nav-dot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.10));
+}
+.hnd-past   { background: var(--spots-orange); }
+.hnd-body   { background: var(--spots-teal); }
+.hnd-act    { background: var(--spots-green); }
+.hnd-feel   { background: var(--spots-feelings); }
+.hnd-report { background: var(--spots-report); }
+.hint-mini-navicon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.10));
+}
+.hint-mini-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.hint-mini-gear {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--spots-blue-medium);
+}
+.hint-mini-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--spots-blue-soft);
+  border: 2px solid var(--spots-blue-medium);
+}
+
+/* Mini body of the home screen — abstract layout that mirrors the real
+ * page: Past Problems + Problem Station side-by-side on top, summary
+ * chart card below.                                                       */
+.hint-mini-body {
+  padding: 14px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hint-mini-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.hint-mini-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.hint-mini-card {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--spots-border);
+  padding: 10px 12px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: var(--shadow-card);
+}
+.hint-mini-past   { border: 2px solid var(--spots-orange); }
+.hint-mini-station { border: 1px solid var(--spots-border); }
+.hint-mini-graph  { padding: 12px 14px; gap: 8px; }
+.hint-mini-card-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #e3e7ee;
+  width: 60%;
+}
+.hint-mini-card-bar.wide { width: 80%; background: var(--spots-orange); opacity: 0.55; }
+.hint-mini-card-bar.short { width: 40%; }
+.hint-mini-station .hint-mini-card-bar.wide {
+  /* Override the orange tint for the Problem Station card. */
+  background: var(--spots-blue-medium);
+  opacity: 0.55;
+}
+.hint-mini-graph .hint-mini-card-bar.wide {
+  background: #cdd2da;
+  opacity: 0.85;
+  align-self: center;
+  width: 70%;
+}
+.hint-mini-graph-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+.hint-mini-graph-bar {
+  height: 10px;
+  border-radius: 2px;
+  background: var(--spots-orange);
+}
+.hint-blurb-line {
+  height: 8px;
+  background: #e3e7ee;
+  border-radius: 4px;
+  width: 60%;
+}
+.hint-blurb-line.short { width: 38%; }
+.hint-blurb-line.tall { width: 50%; height: 12px; background: #d1d5db; }
+.hint-blurb-line.title {
+  width: 55%;
+  height: 16px;
+  background: #cdd2da;
+  margin: 0 auto 4px;
+}
+.hint-blurb-line.centered { margin: 0 auto 8px; }
+.hint-blurb-line.abstract-row { display: block; width: 60%; height: 9px; }
+.hint-blurb-line.abstract-row.short { width: 42%; }
+
+/* Search screen body */
+.hint-search-body {
+  padding: 18px 28px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.hint-search-input {
+  position: relative;
+  border: 1px solid var(--spots-border);
+  border-radius: 10px;
+  background: white;
+  box-shadow: var(--shadow-card);
+  height: 36px;
+  padding: 0 8px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--spots-gray-900);
+  margin-bottom: 10px;
+}
+.hint-search-input-text {
+  font-weight: 700;
+  display: inline-block;
+  overflow: hidden;
+  white-space: pre;
+  letter-spacing: 0.4px;
+  width: 0px;
+  /* Type out "head" letter-by-letter during the search-screen window.
+   * Pixel widths instead of `ch` because "head" in bold sans is wider
+   * than "0000" — `4ch` clipped the trailing "d".                    */
+  animation: hintTypeText 10s steps(1, end) infinite;
+}
+/* Inserted before the typed text via JS-set ::before? Simpler: use a child
+ * span. Implemented via background "head" rendered on top of width-clipped
+ * container — see ::after below for the source string. */
+.hint-search-input-text::before {
+  content: 'head';
+}
+.hint-search-caret {
+  width: 1.5px;
+  height: 14px;
+  background: var(--spots-blue-dark);
+  margin-left: 1px;
+  /* The caret only blinks while it's actually shown (during search screen). */
+  animation: hintCaret 1s steps(2, end) infinite;
+}
+.hint-search-input-icon {
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--spots-red);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+}
+.hint-search-input-icon::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border: 1.6px solid white;
+  border-radius: 50%;
+  box-shadow: 5px 5px 0 -3px white;
+}
+@keyframes hintCaret {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+/* Width steps sized close to the actual rendered "head" so the caret sits
+ * right after the "d" with no dead space.                                */
+@keyframes hintTypeText {
+  0%, 43%   { width: 0px; }
+  46%       { width: 12px; }
+  50%       { width: 22px; }
+  54%       { width: 34px; }
+  58%, 96%  { width: 48px; }
+  100%      { width: 0px; }
+}
+/* Result rows are absolute-positioned so each can animate its `top`
+ * independently — Headache rises from the bottom slot to the top while
+ * the abstract rows shift down to make room.                         */
+.hint-search-results {
+  position: relative;
+  height: 122px; /* 3 rows × ~32px + 2 gaps × ~8px + a little slack */
+  margin-top: 6px;
+}
+.hint-search-row {
+  position: absolute;
+  left: 0; right: 0;
+  background: white;
+  border: 1.5px solid var(--spots-orange);
+  border-radius: 10px;
+  /* Right padding leaves room for the absolutely-positioned chevron. */
+  padding: 7px 32px 7px 14px;
+  font-size: 13px;
+  color: var(--spots-gray-900);
+  font-weight: 600;
+  opacity: 0;
+  transition: none;
+  /* No flex layout here — flex shrink + nowrap was clipping "Headache" to
+   * "Head" depending on intermediate state. Plain block layout with the
+   * chevron pinned via position:absolute renders the full text reliably. */
+}
+.hint-result-real { /* the concrete result (Headache) */ }
+.hint-result-abstract {
+  border-color: #cdd2da;
+  background: #f5f5f5;
+}
+.hint-result-name {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: visible;
+}
+.hint-row-chev {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--spots-orange);
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+}
+/* Three slot positions for the rows. Slot 0 is the top, slot 2 is the bottom. */
+.hint-search-row-1 { animation: hintHeadacheRise 10s ease-in-out infinite; }
+.hint-result-2     { animation: hintAbstractA   10s ease-in-out infinite; }
+.hint-result-3     { animation: hintAbstractB   10s ease-in-out infinite; }
+/* Typing window: 43% (start) → 58% (final letter rendered). Result rows
+ * appear in tight sync with typing — Headache shows up at slot 2 right
+ * after the 3rd letter and is rising by the time typing finishes.       */
+@keyframes hintHeadacheRise {
+  0%, 49%   { opacity: 0; top: 80px; }
+  53%       { opacity: 1; top: 80px; }
+  62%       { opacity: 1; top: 0; }
+  /* Hold at the top through the click + post-click beat. */
+  93%       { opacity: 1; top: 0; }
+  98%, 100% { opacity: 0; top: 0; }
+}
+@keyframes hintAbstractA {
+  0%, 45%  { opacity: 0; top: 0; }
+  48%      { opacity: 1; top: 0; }
+  55%      { opacity: 1; top: 0; }
+  62%      { opacity: 1; top: 40px; }
+  93%      { opacity: 1; top: 40px; }
+  98%, 100% { opacity: 0; }
+}
+@keyframes hintAbstractB {
+  0%, 48%  { opacity: 0; top: 40px; }
+  51%      { opacity: 1; top: 40px; }
+  55%      { opacity: 1; top: 40px; }
+  62%      { opacity: 1; top: 80px; }
+  93%      { opacity: 1; top: 80px; }
+  98%, 100% { opacity: 0; }
+}
+
+/* Click-target overlays — invisible markers for cursor positioning + the
+ * tap-pulse animation. The pulse rings live as ::before/::after. */
+.hint-target {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  border: 2px solid var(--spots-orange);
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+/* Stage is 540px wide × 360px tall. Header is 60px tall; nav row is 6 dots
+ * (30px each, gap 14px = total 226px) centered between left padding 56 and
+ * right cluster ~80px, so nav band runs roughly 117..453. Each dot is at:
+ *   1: ~117, 2: ~161, 3: ~205, 4: ~249, 5 (Search): ~293, 6: ~337
+ * The Search icon center is at (~308, 30). */
+.hint-target-search {
+  top: 14px;
+  left: 311px;
+  width: 32px;
+  height: 32px;
+}
+/* Click-target overlays for elements in the search screen body. The body
+ * starts at y=60 (under header). With body padding 18px top + 16px title +
+ * 8px subtitle margin + 6px gap → input sits at roughly y=110, full width
+ * (28px each side) so spans x=28..512. */
+.hint-target-input {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+}
+.hint-target-row {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* Cursor sprite */
+.hint-cursor {
+  position: absolute;
+  top: 0; left: 0;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+}
+.hint-cursor svg { width: 100%; height: 100%; }
+
+/* ============================================================
+ * Walkthrough timeline (8s loop):
+ *   0.0–0.4s  : home visible, cursor in bottom-right
+ *   0.4–2.0s  : cursor glides to Search nav icon
+ *   2.0–2.5s  : click pulse on Search icon + crossfade to search
+ *   2.5–3.4s  : cursor glides to search input + click pulse
+ *   3.4–4.6s  : "head" types out one letter at a time
+ *               • abstract rows fade in at slots 0 & 1
+ *               • Headache fades in at slot 2 then rises to slot 0
+ *   4.6–5.2s  : cursor glides up to "Headache" (now at the top)
+ *   5.2–5.6s  : click pulse on Headache + row highlight
+ *   5.6–7.6s  : HOLD — wait a beat after selection
+ *   7.6–8.0s  : crossfade back to home (loop)
+ * ============================================================ */
+.hint-screen-home {
+  animation: hintHomeFade 10s linear infinite;
+}
+.hint-screen-search {
+  animation: hintSearchFade 10s linear infinite;
+}
+@keyframes hintHomeFade {
+  0%, 26% { opacity: 1; }
+  32%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes hintSearchFade {
+  0%, 26% { opacity: 0; }
+  32%, 95% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.hint-cursor {
+  animation: hintCursor 10s ease-in-out infinite;
+}
+@keyframes hintCursor {
+  /* Coords are tuned so the cursor tip (~3,2 within its SVG) lands on the
+   * click point.                                                          */
+  0%   { transform: translate(470px, 310px); }
+  5%   { transform: translate(470px, 310px); }
+  /* glide to Search nav icon (~327, 30 in stage coords) */
+  24%  { transform: translate(324px, 28px); }
+  /* click pulse on Search */
+  27%  { transform: translate(324px, 28px) scale(0.82); }
+  31%  { transform: translate(324px, 28px); }
+  /* glide to search input (left side where typing appears) */
+  39%  { transform: translate(80px, 130px); }
+  /* click pulse on input */
+  42%  { transform: translate(80px, 130px) scale(0.85); }
+  44%  { transform: translate(80px, 130px); }
+  /* hold while typing + result rows happen */
+  64%  { transform: translate(80px, 130px); }
+  /* glide up to "Headache" — now at slot 0 (y≈178 in stage coords). Wait
+   * until Headache has settled at the top before clicking on it.        */
+  70%  { transform: translate(120px, 175px); }
+  /* click pulse on Headache */
+  72%  { transform: translate(120px, 175px) scale(0.85); }
+  74%  { transform: translate(120px, 175px); }
+  /* HOLD — wait a beat after the selection click */
+  95%  { transform: translate(120px, 175px); }
+  /* return towards bottom-right while screens crossfade back */
+  100% { transform: translate(470px, 310px); }
+}
+
+/* Click pulses — independent per-target so timing is granular. */
+.hint-target-search { animation: hintPulseSearch 10s ease-out infinite; }
+.hint-target-input  { animation: hintPulseInput  10s ease-out infinite; }
+.hint-target-row    { animation: hintPulseRow    10s ease-out infinite; }
+@keyframes hintPulseSearch {
+  0%, 25%  { opacity: 0; transform: scale(0.7); }
+  27%      { opacity: 0.9; transform: scale(0.7); }
+  31%      { opacity: 0; transform: scale(2); }
+  100%     { opacity: 0; transform: scale(2); }
+}
+@keyframes hintPulseInput {
+  0%, 41%  { opacity: 0; transform: scale(0.97); }
+  43%      { opacity: 0.9; transform: scale(1); }
+  47%      { opacity: 0; transform: scale(1.03); }
+  100%     { opacity: 0; transform: scale(1.03); }
+}
+@keyframes hintPulseRow {
+  0%, 70%  { opacity: 0; transform: scale(0.97); }
+  72%      { opacity: 0.9; transform: scale(1); }
+  76%      { opacity: 0; transform: scale(1.04); }
+  100%     { opacity: 0; transform: scale(1.04); }
+}
+
+/* Highlight the Headache result during its click moment, then hold the
+ * highlighted state through the post-click beat.                       */
+.hint-search-row-1 {
+  /* Layer rise + highlight animations on the same row. */
+  animation: hintHeadacheRise 10s ease-in-out infinite, hintRowHighlight 10s ease-out infinite;
+}
+@keyframes hintRowHighlight {
+  0%, 71%   { background: white; }
+  73%, 93%  { background: #fff4ec; }
+  95%, 100% { background: white; }
+}
+
+/* ============================================================
+ * Search nav dot color — used when search is abstracted in
+ * the four other demos (the existing search demo renders the
+ * search slot as a concrete real SVG so it doesn't need it).
+ * ============================================================ */
+.hnd-search { background: var(--spots-red); }
+
+/* ============================================================
+ * Demo: Body Parts (key === 'bodyParts')
+ * Stage layout: list screen (figure + abstract part list) crossfades
+ * with detail screen (small figure + symptom rows). 10s loop.
+ * Timeline:
+ *   0.00–0.05  cursor idle bottom-right
+ *   0.05–0.22  cursor glides up to Body Parts nav
+ *   0.22–0.27  click pulse on nav + screen swap to list
+ *   0.27–0.45  cursor glides to Left Foot region; foot glow appears
+ *   0.45–0.50  click pulse on foot + screen swap to detail
+ *   0.50–0.70  cursor glides down to first symptom row
+ *   0.70–0.75  click pulse on row + row highlight
+ *   0.75–0.95  HOLD (frozen on highlighted row)
+ *   0.95–1.00  fade back to start
+ * ============================================================ */
+.hint-bp-stage { font-family: var(--font-body); }
+
+/* Three-phase fades — all four new demos share this 10s timeline:
+ *   0–17%  home visible (cursor on home / gliding to nav)
+ *   18–22% cursor at nav, click pulse, home fades out
+ *   25–47% nav-screen visible (cursor moves to its target)
+ *   50–95% detail-screen visible (cursor on its target, then HOLD)
+ */
+.hint-bp-stage .hint-screen-home { animation: hintBpScreenHome 10s linear infinite; }
+.hint-bp-screen-list   { animation: hintBpScreenList 10s linear infinite; }
+.hint-bp-screen-detail { animation: hintBpScreenDetail 10s linear infinite; }
+@keyframes hintBpScreenHome {
+  0%, 19%  { opacity: 1; }
+  24%, 100% { opacity: 0; }
+}
+@keyframes hintBpScreenList {
+  0%, 22%  { opacity: 0; }
+  25%, 47% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hintBpScreenDetail {
+  0%, 47%  { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+.hint-bp-body {
+  position: relative;
+  padding: 14px 24px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hint-bp-row {
+  display: grid;
+  /* Both columns locked to the body-figure width (216px) so the parts-list
+   * panel visually balances against the body diagram. Was 1fr:1.2fr, which
+   * stretched the panel ~260px wider than the figure. */
+  grid-template-columns: 216px 216px;
+  justify-content: start;
+  gap: 16px;
+  align-items: start;
+  margin-top: 4px;
+}
+.hint-bp-figure {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, transparent 50%, var(--spots-yellow) 50%);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.hint-bp-figure.small { height: 150px; }
+.hint-bp-figure svg { height: 100%; width: auto; }
+/* Real production body figure rendered as a plain image — no event wiring
+ * needed for the demo (cursor + glow are CSS-driven). The SVG's intrinsic
+ * viewBox is 284×564, so height-constrained scaling keeps width ≈ 90px. */
+.hint-bp-body-img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  flex: 0 0 auto;
+}
+
+/* CSS-positioned highlight disc over the Left Foot region of the figure.
+ * Figure container is 216px wide × 180px tall (stage 540 - 48 padding,
+ * grid 1fr:1.2fr with 16 gap → 1fr ≈ 216.4). Image height-bound to 180px;
+ * with viewBox 284×564 the rendered image is ≈ 90.6px wide and centered
+ * in the figure box, so image-left ≈ 62.9px (29% of figure box), image-right
+ * ≈ 153.5px (71%). Left Foot center in viewBox ≈ (199, 540) → 70.1% across
+ * image, 95.7% down image. In figure-box coords:
+ *   x: (62.9 + 0.701 × 90.6) / 216 ≈ 58.5% from figure left
+ *   y: 0.957 × 180 / 180 = 95.7% from figure top
+ * The rendered foot itself is ~23×13px (vbox foot bbox 71×41 × scale 90.6/284).
+ * Size the glow slightly larger so it reads as a highlight, not a dot. */
+.hint-bp-leftfoot-glow {
+  position: absolute;
+  width: 30px;
+  height: 18px;
+  left: 58.5%;
+  top: 95.7%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(195, 226, 226, 0.7);
+  border: 2px solid #00BBA7;
+  pointer-events: none;
+  animation: hintBpFootGlow 10s ease-in-out infinite;
+}
+@keyframes hintBpFootGlow {
+  0%, 33%   { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+  38%, 47%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50%, 100% { opacity: 0; }
+}
+
+/* Mirrors production `.bp-list-panel`: white card with blue-light outline,
+ * rounded corners, internal padding so the rows don't sit flush to the edge.
+ * The hint version drops the panel header (no "All Body Parts" title needed
+ * in the abstracted demo) and scales the radius/padding to match the
+ * 540px stage. The `.detail` variant is used on screen 2 around the
+ * symptom-list rows of the body-part-detail screen — same chassis. */
+.hint-bp-list-panel {
+  background: white;
+  border: 1.25px solid var(--spots-blue-light);
+  border-radius: 10px;
+  padding: 8px 8px 10px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+.hint-bp-list-panel.detail { padding: 8px 10px 10px; }
+
+.hint-bp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 0;
+}
+/* Mirrors the real `.bp-row` chassis (round thumb + label + orange chev). */
+.hint-bp-parts-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1.5px solid var(--spots-orange);
+  border-radius: 10px;
+  background: white;
+}
+.hint-bp-parts-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  flex: 0 0 auto;
+}
+/* Image variant: real body-part thumbnail (production asset) cropped into
+ * the same 22px circle as the abstract gray slot. Used to flag the Left
+ * Foot row as the concrete destination the cursor flow points to. */
+.hint-bp-parts-thumb-img {
+  object-fit: cover;
+  background: transparent;
+  display: block;
+}
+.hint-bp-parts-label {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: #d1d5db;
+  width: 70%;
+}
+.hint-bp-parts-label.wide  { width: 80%; }
+.hint-bp-parts-label.short { width: 45%; }
+.hint-bp-parts-chev {
+  color: var(--spots-orange);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.hint-bp-detail {
+  position: relative;
+  padding: 12px 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hint-bp-detail-row {
+  display: grid;
+  /* Match screen 1: both columns locked to 216px (the body-figure width)
+   * so the symptom-list panel visually balances against the body diagram. */
+  grid-template-columns: 216px 216px;
+  justify-content: start;
+  gap: 14px;
+}
+.hint-bp-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+}
+.hint-bp-detail-label {
+  height: 14px;
+  width: 50%;
+  background: #cdd2da;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+/* Mirrors the real `.symptom-row`: pill row, name on left + round empty
+ * check circle on right. Concrete row shows the actual symptom name; abstract
+ * rows substitute a gray text-bar in the same slot. */
+.hint-bp-symptom-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 1.5px solid var(--spots-teal);
+  border-radius: 10px;
+  padding: 8px 12px;
+  height: 24px;
+}
+.hint-bp-symptom-row.abstract { /* same chassis, only content differs */ }
+.hint-bp-symptom-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--spots-blue-dark);
+}
+.hint-bp-symptom-bar {
+  height: 9px;
+  border-radius: 4px;
+  background: #d1d5db;
+  width: 70%;
+  display: inline-block;
+}
+.hint-bp-symptom-bar.short { width: 45%; }
+.hint-bp-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--spots-blue);
+  border-radius: 50%;
+  background: white;
+  flex-shrink: 0;
+}
+.hint-bp-symptom-target {
+  /* The first symptom row gets clicked + highlighted */
+  animation: hintBpRowHighlight 10s ease-out infinite;
+}
+@keyframes hintBpRowHighlight {
+  0%, 71%   { background: white; }
+  73%, 93%  { background: #d8f0ee; }
+  95%, 100% { background: white; }
+}
+
+/* Click targets: nav (header on home + list screens), foot (body), symptom row.
+ * The cursor click happens during the home phase — once it lands on the nav
+ * the home screen fades out and the list screen fades in. The same target
+ * lives on both screens (one element per screen) but the pulse only runs
+ * once during the home→list transition. */
+.hint-bp-target-nav-home,
+.hint-bp-target-nav {
+  top: 14px;
+  /* Body Parts nav slot is index 1. Slot 4 (Search) is at left:311, slot
+   * width+gap is ~44px → slot 1 center at left ≈ 311 - 3*44 = 179. */
+  left: 179px;
+  width: 32px;
+  height: 32px;
+  border-color: var(--spots-teal);
+}
+.hint-bp-target-foot {
+  /* Real body SVG (vbox 284×564). With figure height 180px the image is
+   * ≈ 90.6px wide, centered in a 216px figure column. The body element
+   * (.hint-bp-body) starts at stage y=60; figure top inside body ≈ 70px
+   * down (padding + title + subtitle + gaps), so figure top in body
+   * coords ≈ 70, figure bottom ≈ 250. Left Foot inside the image lands
+   * at ~92% of image height → body y ≈ 70 + 166 = 236. Image is
+   * centered in figure col (24..240); image left ≈ 87, image width
+   * ≈ 90.6; Left Foot at 70% across image → body x ≈ 150. Target is
+   * 30×24, so top = 236-12 = 224, left = 150-15 = 135. */
+  position: absolute;
+  top: 224px;
+  left: 135px;
+  width: 30px;
+  height: 24px;
+  border-radius: 50%;
+  border-color: var(--spots-teal);
+}
+.hint-bp-target-symptom {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-teal);
+}
+.hint-bp-target-nav,
+.hint-bp-target-foot,
+.hint-bp-target-symptom {
+  animation: hintBpPulse 10s ease-out infinite;
+}
+.hint-bp-target-nav     { animation-name: hintBpPulseNav; }
+.hint-bp-target-foot    { animation-name: hintBpPulseFoot; }
+.hint-bp-target-symptom { animation-name: hintBpPulseSymptom; }
+/* Nav-home target lives on the mini-home screen — same teal pulse as the
+ * one on the list screen, runs in sync with the cursor click during the
+ * home → list crossfade. */
+.hint-bp-target-nav-home {
+  position: absolute;
+  animation: hintBpPulseNav 10s ease-out infinite;
+  border: 2px solid var(--spots-teal);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+@keyframes hintBpPulseNav {
+  0%, 17%  { opacity: 0; transform: scale(0.7); }
+  19%      { opacity: 0.9; transform: scale(0.7); }
+  23%      { opacity: 0; transform: scale(2); }
+  100%     { opacity: 0; transform: scale(2); }
+}
+@keyframes hintBpPulseFoot {
+  0%, 42%  { opacity: 0; transform: scale(0.7); }
+  44%      { opacity: 0.9; transform: scale(0.8); }
+  48%      { opacity: 0; transform: scale(2); }
+  100%     { opacity: 0; transform: scale(2); }
+}
+@keyframes hintBpPulseSymptom {
+  0%, 70%  { opacity: 0; transform: scale(0.97); }
+  72%      { opacity: 0.9; transform: scale(1); }
+  76%      { opacity: 0; transform: scale(1.04); }
+  100%     { opacity: 0; transform: scale(1.04); }
+}
+
+.hint-bp-cursor { animation: hintBpCursor 10s ease-in-out infinite; }
+@keyframes hintBpCursor {
+  /* Cursor SVG tip is at ~(3, 2) within its 22×22 box, so subtract those
+   * offsets when targeting a stage coordinate. */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* glide to Body Parts nav (slot 1 center ≈ 195, 30) → tip lands there */
+  17%      { transform: translate(192px, 28px); }
+  19%      { transform: translate(192px, 28px) scale(0.82); }
+  23%      { transform: translate(192px, 28px); }
+  /* glide down to Left Foot on the real body figure (stage ≈ 150, 296) */
+  43%      { transform: translate(147px, 294px); }
+  46%      { transform: translate(147px, 294px) scale(0.85); }
+  50%      { transform: translate(147px, 294px); }
+  /* glide to first symptom row in detail screen. Detail screen layout:
+   *   header 60 + .hint-bp-detail padding-top 12 + title 16 + 4 + gap 8 = 100
+   *   right col is now wrapped in `.hint-bp-list-panel.detail` (padding 8 10):
+   *   panel-pad-top 8 + label 14 + 4 + gap 6 → row 0 top ≈ 132;
+   *   row height 40 → center y ≈ 152. Tip on the bold "Foot pain" text near
+   *   the left of the row → stage (340, 152) → cursor (337, 150). */
+  68%      { transform: translate(337px, 150px); }
+  72%      { transform: translate(337px, 150px) scale(0.85); }
+  76%      { transform: translate(337px, 150px); }
+  /* HOLD on selected row */
+  95%      { transform: translate(337px, 150px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Activities (key === 'activities')
+ * Timeline:
+ *   0–0.20  cursor → Activities nav → click + screen swap
+ *   0.20–0.45  cursor → Sleep card → hover → click → modal opens
+ *   0.45–0.70  cursor → 2nd symptom row (Fatigue) → click
+ *   0.70–0.95  HOLD on selected row
+ *   0.95–1.00  fade back
+ * ============================================================ */
+.hint-act-stage { font-family: var(--font-body); }
+
+.hint-act-stage .hint-screen-home { animation: hintActScreenHome 10s linear infinite; }
+.hint-act-screen-grid  { animation: hintActScreenGrid 10s linear infinite; }
+.hint-act-screen-modal { animation: hintActScreenModal 10s linear infinite; }
+@keyframes hintActScreenHome {
+  0%, 19%  { opacity: 1; }
+  24%, 100% { opacity: 0; }
+}
+@keyframes hintActScreenGrid {
+  0%, 22%  { opacity: 0; }
+  25%, 47% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hintActScreenModal {
+  0%, 47%  { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+.hint-act-body {
+  position: relative;
+  padding: 12px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hint-act-body.dim { background: rgba(0, 0, 0, 0.06); height: 100%; }
+.hint-act-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+}
+/* Activities card chassis — mirrors the real `.picker-card`: small label
+ * at top + large illustration area filling the bulk of the card. Both
+ * abstract and concrete cards share this layout. */
+.hint-act-card {
+  position: relative;
+  background: white;
+  border: 1.5px solid var(--spots-green);
+  border-radius: 10px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  overflow: hidden;
+}
+/* Abstract card: tiny gray label-bar at the top + large inner gray rect
+ * filling the rest (the "image area" placeholder). */
+.hint-act-card-label-bar {
+  display: block;
+  width: 55%;
+  height: 6px;
+  background: #cdd2da;
+  border-radius: 3px;
+  margin: 2px 4px 0;
+  flex: 0 0 auto;
+}
+.hint-act-card.abstract .hint-act-card-inner {
+  flex: 1 1 auto;
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 4px;
+  background: var(--spots-bg-light-gray);
+}
+.hint-act-card.concrete {
+  border-width: 2px;
+  background: white;
+}
+.hint-act-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--spots-gray-900);
+  text-align: left;
+  padding: 2px 4px 0;
+  font-family: var(--font-body);
+  flex: 0 0 auto;
+}
+.hint-act-card-icon {
+  width: 28px; height: 28px;
+}
+.hint-act-card-icon svg { width: 100%; height: 100%; }
+/* Concrete-card illustration — fills the remaining card area below the
+ * label, mirroring the real `.picker-card img` proportions (label small,
+ * image dominant). */
+.hint-act-card-thumb {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--spots-bg-light-gray);
+  display: block;
+}
+
+.hint-act-modal {
+  position: absolute;
+  top: 70px;
+  left: 90px;
+  right: 90px;
+  background: white;
+  border: 2px solid var(--spots-green);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hint-act-modal-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+  text-align: center;
+}
+/* Large activity illustration that sits between the title and the symptom
+ * list — mirrors the real activity-modal `.activity-modal-image`. */
+.hint-act-modal-image {
+  width: 70%;
+  height: 90px;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--spots-bg-light-gray);
+  display: block;
+}
+.hint-act-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Mirrors the real `.symptom-row` (used by the activity-detail modal):
+ * pill row with bold name on left + round empty check circle on right.
+ * Shared by Activities and Feelings demos. */
+.hint-act-symptom-row {
+  position: relative;
+  background: white;
+  border: 1.5px solid var(--spots-green);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 20px;
+}
+/* Activities-only tightening: keep the same orange-pill chassis as the
+ * real `.symptom-row` (orange border, blue radio) but compact vertical
+ * padding so all four rows + the large activity image fit inside the
+ * modal. NO thumbnail column — the real activity-modal symptom row is
+ * just name + radio. */
+.hint-act-stage .hint-act-symptom-row {
+  padding: 5px 10px;
+  height: 18px;
+  border-color: var(--spots-orange);
+}
+.hint-act-symptom-row.abstract {
+  /* Same orange-on-white chassis as the real `.symptom-row`; only the inner
+   * content (text-bar vs. word) differs from the concrete row. */
+  background: white;
+}
+.hint-act-symptom-row.feel { border-color: var(--spots-feelings); }
+.hint-act-symptom-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--spots-blue-dark);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hint-act-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--spots-blue);
+  border-radius: 50%;
+  background: white;
+  flex-shrink: 0;
+  display: inline-block;
+  margin-left: auto;
+}
+.hint-feel-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--spots-blue);
+  border-radius: 50%;
+  background: white;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.hint-act-symptom-target {
+  animation: hintActRowHighlight 10s ease-out infinite;
+}
+@keyframes hintActRowHighlight {
+  0%, 66%   { background: white; }
+  68%, 93%  { background: #f1f6dc; }
+  95%, 100% { background: white; }
+}
+
+.hint-act-target-nav-home,
+.hint-act-target-nav {
+  top: 14px;
+  /* Activities nav slot index 2 → left ≈ 311 - 2*44 = 223. */
+  left: 223px;
+  width: 32px;
+  height: 32px;
+  border-color: var(--spots-green);
+  animation: hintBpPulseNav 10s ease-out infinite;
+}
+.hint-act-target-nav-home {
+  position: absolute;
+  border: 2px solid var(--spots-green);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.hint-act-target-sleep {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-green);
+  animation: hintActPulseCard 10s ease-out infinite;
+}
+.hint-act-target-symptom {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-green);
+  animation: hintActPulseSymptom 10s ease-out infinite;
+}
+@keyframes hintActPulseCard {
+  0%, 42%  { opacity: 0; transform: scale(0.97); }
+  44%      { opacity: 0.9; transform: scale(1); }
+  48%      { opacity: 0; transform: scale(1.05); }
+  100%     { opacity: 0; transform: scale(1.05); }
+}
+@keyframes hintActPulseSymptom {
+  0%, 66%  { opacity: 0; transform: scale(0.97); }
+  68%      { opacity: 0.9; transform: scale(1); }
+  72%      { opacity: 0; transform: scale(1.04); }
+  100%     { opacity: 0; transform: scale(1.04); }
+}
+
+.hint-act-cursor { animation: hintActCursor 10s ease-in-out infinite; }
+@keyframes hintActCursor {
+  /* Tip offset (3, 2) — subtract from each desired stage coord. */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* Activities nav (slot 2 center ≈ 239, 30) */
+  17%      { transform: translate(236px, 28px); }
+  19%      { transform: translate(236px, 28px) scale(0.82); }
+  23%      { transform: translate(236px, 28px); }
+  /* glide to Sleep card centroid (row 2, col 1).
+   * 3-col grid in body padded 28px both sides; col width ≈ 154.7px;
+   * Sleep card center: x = 28 + 154.7/2 ≈ 105.
+   * Vertical: 60 (header) + 12 (body pad-top) + 20 (title incl margin-b 4)
+   *   + 6 (flex gap) + 16 (subtitle incl margin-b 8) + 6 (flex gap)
+   *   + 6 (grid margin-top) + 100 (row 1 height) + 10 (row gap)
+   *   + 100/2 (half row 2) = 286.
+   * Tip → cursor (102, 284). */
+  42%      { transform: translate(102px, 284px); }
+  44%      { transform: translate(102px, 284px) scale(0.85); }
+  48%      { transform: translate(102px, 284px); }
+  /* glide to "Fatigue" (2nd row in modal, index 1). Modal top:70, pad-top 14.
+   * Title ~17, gap 6, image 90, gap 6 → list starts at modal-y = 14+17+6
+   *   +90+6 = 133. Stage list-top = 70 + 133 = 203.
+   * Rows use border-box (global `* { box-sizing: border-box }`), so the
+   * declared `height: 18px` IS the full row height (padding + border
+   * included). Row gap 6.
+   *   Row 0 (abstract): top 203, center 212.
+   *   Row 1 (Fatigue):  top 203+18+6 = 227, center 227 + 9 = 236.
+   *   Row 2 (Pain):     top 227+18+6 = 251, center 260.
+   * Earlier math used 31px row height (content-box) and landed the tip on
+   * Pain. Correct Fatigue center-y = 236.
+   * Modal-left 90 + pad-left 16 + row pad-left 10 = 116 = "F" of Fatigue.
+   * Word ~46px wide → center x ≈ 116 + 23 = 139.
+   * Tip offset (3, 2) → cursor translate (136, 234). */
+  66%      { transform: translate(136px, 234px); }
+  68%      { transform: translate(136px, 234px) scale(0.85); }
+  72%      { transform: translate(136px, 234px); }
+  /* HOLD */
+  95%      { transform: translate(136px, 234px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Feelings (key === 'feelings')
+ * Same structure as Activities but with blue cards.
+ * ============================================================ */
+.hint-feel-stage { font-family: var(--font-body); }
+
+.hint-feel-stage .hint-screen-home { animation: hintFeelScreenHome 10s linear infinite; }
+.hint-feel-screen-grid { animation: hintFeelScreenGrid 10s linear infinite; }
+.hint-feel-screen-list { animation: hintFeelScreenList 10s linear infinite; }
+@keyframes hintFeelScreenHome {
+  0%, 19%  { opacity: 1; }
+  24%, 100% { opacity: 0; }
+}
+@keyframes hintFeelScreenGrid {
+  0%, 22%  { opacity: 0; }
+  25%, 47% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hintFeelScreenList {
+  0%, 47%  { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+.hint-feel-body {
+  position: relative;
+  padding: 12px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hint-feel-body.dim { background: rgba(0, 0, 0, 0.06); height: 100%; }
+.hint-feel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+}
+/* Feelings card chassis — mirrors Activities `.hint-act-card` (and the real
+ * `.picker-card`): small label-bar at top + large illustration area filling
+ * the bulk of the card. Blue-outlined to distinguish from the green
+ * Activities cards. Same dimensions (100px height) for consistent demo
+ * layout. */
+.hint-feel-card {
+  position: relative;
+  background: white;
+  border: 1.5px solid var(--spots-blue-medium);
+  border-radius: 10px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  overflow: hidden;
+}
+/* Abstract card: tiny gray label-bar at the top + large inner gray rect
+ * filling the rest. */
+.hint-feel-card-label-bar {
+  display: block;
+  width: 55%;
+  height: 6px;
+  background: #cdd2da;
+  border-radius: 3px;
+  margin: 2px 4px 0;
+  flex: 0 0 auto;
+}
+.hint-feel-card.abstract .hint-feel-card-inner {
+  flex: 1 1 auto;
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 4px;
+  background: var(--spots-bg-light-gray);
+}
+.hint-feel-card.concrete {
+  border-color: var(--spots-feelings);
+  border-width: 2px;
+  background: white;
+}
+.hint-feel-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--spots-gray-900);
+  text-align: left;
+  padding: 2px 4px 0;
+  font-family: var(--font-body);
+  flex: 0 0 auto;
+}
+/* Concrete-card illustration — fills the remaining card area below the
+ * label, mirroring the real `.picker-card img` proportions. */
+.hint-feel-card-thumb {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--spots-bg-light-gray);
+  display: block;
+}
+
+/* Feelings detail modal — mirrors the Activities modal (title at top,
+ * large illustration in the middle, symptom rows below). */
+.hint-feel-modal {
+  position: absolute;
+  top: 70px;
+  left: 90px;
+  right: 90px;
+  background: white;
+  border: 2px solid var(--spots-feelings);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hint-feel-modal-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+  text-align: center;
+}
+.hint-feel-modal-image {
+  width: 70%;
+  height: 90px;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--spots-bg-light-gray);
+  display: block;
+}
+.hint-feel-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Match the Activities-stage tightening for symptom rows so the same
+ * orange-pill chassis fits inside the Feelings modal. The shared
+ * `.hint-act-symptom-row` rule already provides chassis + colors; this
+ * stage scope tightens padding/height to match Activities. */
+.hint-feel-stage .hint-act-symptom-row {
+  padding: 5px 10px;
+  height: 18px;
+  border-color: var(--spots-orange);
+}
+.hint-feel-symptom-target {
+  animation: hintFeelRowHighlight 10s ease-out infinite;
+}
+@keyframes hintFeelRowHighlight {
+  0%, 66%   { background: white; }
+  68%, 93%  { background: #fff1e0; }
+  95%, 100% { background: white; }
+}
+
+.hint-feel-target-nav-home,
+.hint-feel-target-nav {
+  top: 14px;
+  /* Feelings nav slot index 3 → left ≈ 311 - 1*44 = 267. */
+  left: 267px;
+  width: 32px;
+  height: 32px;
+  border-color: var(--spots-feelings);
+  animation: hintBpPulseNav 10s ease-out infinite;
+}
+.hint-feel-target-nav-home {
+  position: absolute;
+  border: 2px solid var(--spots-feelings);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.hint-feel-target-worried {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-feelings);
+  animation: hintActPulseCard 10s ease-out infinite;
+}
+.hint-feel-target-symptom {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-feelings);
+  animation: hintActPulseSymptom 10s ease-out infinite;
+}
+
+.hint-feel-cursor { animation: hintFeelCursor 10s ease-in-out infinite; }
+@keyframes hintFeelCursor {
+  /* Tip offset (3, 2) — subtract from each desired stage coord. */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* Feelings nav (slot 3 center ≈ 283, 30) */
+  17%      { transform: translate(280px, 28px); }
+  19%      { transform: translate(280px, 28px) scale(0.82); }
+  23%      { transform: translate(280px, 28px); }
+  /* glide to Worried card centroid (row 0, col 1).
+   * 3-col grid in body padded 28px both sides; col width ≈ 154.7px;
+   * Worried card center-x = 28 + 154.7 + 154.7/2 ≈ 260.
+   * Vertical: 60 (header) + 12 (body pad-top) + 20 (title incl margin-b 4)
+   *   + 6 (flex gap) + 16 (subtitle incl margin-b 8) + 6 (flex gap)
+   *   + 6 (grid margin-top) + 100/2 (half row 0) = 176.
+   * Tip → cursor (257, 174). */
+  42%      { transform: translate(257px, 174px); }
+  44%      { transform: translate(257px, 174px) scale(0.85); }
+  48%      { transform: translate(257px, 174px); }
+  /* glide to row 1 ("Worried or nervous feelings") in modal. Modal top:70,
+   * pad-top 14. Title ~17, gap 6, image 90, gap 6 → list starts at modal-y
+   * = 14+17+6+90+6 = 133. Stage list-top = 70 + 133 = 203.
+   * Rows are border-box (global `* { box-sizing: border-box }`); declared
+   * height: 18px IS the full row height. Row gap 6.
+   *   Row 0 (abstract): top 203, center 212.
+   *   Row 1 (Worried):  top 203+18+6 = 227, center 227 + 9 = 236.
+   * Modal-left 90 + pad-left 16 + row pad-left 10 = 116 = "W" of the label.
+   * Cursor sits ~24px into the text to land mid-letter on the bold name.
+   * Tip → cursor translate (137, 234). */
+  66%      { transform: translate(137px, 234px); }
+  68%      { transform: translate(137px, 234px) scale(0.85); }
+  72%      { transform: translate(137px, 234px); }
+  /* HOLD */
+  95%      { transform: translate(137px, 234px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Past Problems (key === 'pastProblems')
+ * Continues PAST symptom click into the question modal.
+ * Timeline:
+ *   0–0.20  cursor → Past Problems nav → click + swap
+ *   0.20–0.45  cursor → Headache row → click → swap to question modal
+ *   0.45–0.95  HOLD on question modal
+ * ============================================================ */
+.hint-pp-stage { font-family: var(--font-body); }
+
+.hint-pp-stage .hint-screen-home { animation: hintPpScreenHome 10s linear infinite; }
+.hint-pp-screen-list  { animation: hintPpScreenList 10s linear infinite; }
+.hint-pp-screen-modal { animation: hintPpScreenModal 10s linear infinite; }
+@keyframes hintPpScreenHome {
+  0%, 19%  { opacity: 1; }
+  24%, 100% { opacity: 0; }
+}
+@keyframes hintPpScreenList {
+  0%, 22%  { opacity: 0; }
+  25%, 47% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes hintPpScreenModal {
+  0%, 47%  { opacity: 0; }
+  50%, 95% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+.hint-pp-body {
+  position: relative;
+  padding: 14px 28px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hint-pp-body.dim { background: rgba(0, 0, 0, 0.06); height: 100%; }
+
+.hint-pp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+.hint-pp-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 1px solid var(--spots-border, #e5e7eb);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.hint-pp-row.concrete { border: 2px solid var(--spots-orange); }
+/* Real `.pp-row` chassis: white card with subtle gray border, soft shadow,
+ * grid of [checkbox | info | dots | chev]. Abstracts share the same chassis
+ * — only the text-bearing slots are replaced with placeholder bars. */
+.hint-pp-row.abstract { background: white; }
+.hint-pp-checkbox {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--spots-gray-700, #4b5563);
+  border-radius: 4px;
+  background: white;
+  flex-shrink: 0;
+}
+.hint-pp-info { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.hint-pp-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+}
+.hint-pp-date {
+  font-size: 10px;
+  color: var(--spots-text-muted, #6B7280);
+}
+.hint-pp-name-bar {
+  display: block;
+  height: 9px;
+  width: 60%;
+  border-radius: 4px;
+  background: #cbd5e1;
+}
+.hint-pp-name-bar.short { width: 40%; }
+.hint-pp-date-bar {
+  display: block;
+  height: 6px;
+  width: 80%;
+  border-radius: 3px;
+  background: #e5e7eb;
+}
+.hint-pp-row-dots {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.hint-pp-row-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c8cdd4;
+  display: inline-block;
+}
+.hint-pp-chev {
+  color: var(--spots-orange);
+  font-weight: 800;
+  font-size: 16px;
+  margin-left: auto;
+}
+.hint-pp-chev.abstract { color: #9ca3af; }
+
+.hint-pp-modal {
+  position: absolute;
+  top: 80px;
+  left: 80px;
+  right: 80px;
+  background: white;
+  border: 2px solid var(--spots-orange);
+  border-radius: 14px;
+  padding: 16px 20px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hint-pp-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+  text-align: center;
+}
+.hint-pp-modal-prompt {
+  height: 10px;
+  background: #d1d5db;
+  border-radius: 4px;
+  width: 78%;
+  margin: 0 auto;
+}
+/* Real question modal options are full-pill rating buttons (`.rating-btn`)
+ * in escalating blue intensities. Mirror that with rounded pills + a faint
+ * inner text-bar as the placeholder label. */
+.hint-pp-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.hint-pp-modal-option {
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 14px;
+  width: 75%;
+  background: #c5e6ff;
+}
+.hint-pp-modal-option:nth-child(2) { background: #6fc7ff; }
+.hint-pp-modal-option:nth-child(3) { background: #2d9cff; }
+.hint-pp-modal-option:nth-child(4) { background: #1a73e8; }
+.hint-pp-modal-option .hint-bp-symptom-bar {
+  background: rgba(255,255,255,0.65);
+  height: 7px;
+}
+.hint-pp-modal-option:nth-child(n+2) .hint-bp-symptom-bar {
+  background: rgba(255,255,255,0.85);
+}
+.hint-pp-modal-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.hint-pp-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #cdd2da;
+}
+.hint-pp-dot.active { background: var(--spots-orange); }
+
+.hint-pp-target-nav-home,
+.hint-pp-target-nav {
+  top: 14px;
+  /* Past Problems nav slot index 0 → left ≈ 311 - 4*44 = 135. */
+  left: 135px;
+  width: 32px;
+  height: 32px;
+  border-color: var(--spots-orange);
+  animation: hintBpPulseNav 10s ease-out infinite;
+}
+.hint-pp-target-nav-home {
+  position: absolute;
+  border: 2px solid var(--spots-orange);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.hint-pp-target-row {
+  position: absolute;
+  inset: -4px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  border-color: var(--spots-orange);
+  animation: hintActPulseCard 10s ease-out infinite;
+}
+
+.hint-pp-cursor { animation: hintPpCursor 10s ease-in-out infinite; }
+@keyframes hintPpCursor {
+  /* Tip offset (3, 2). */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* Past Problems nav (slot 0 center ≈ 151, 30) */
+  17%      { transform: translate(148px, 28px); }
+  19%      { transform: translate(148px, 28px) scale(0.82); }
+  23%      { transform: translate(148px, 28px); }
+  /* Headache row (first row in list). Header 60 + body padding-top 14 +
+   * title (16+4) + gap 8 + subtitle (8+8) + gap 8 + list margin-top 6 = 132;
+   * row 0 height ≈ 53 (padding 10+10 + 13 name + 2 gap + 10 date + leading)
+   * → center y ≈ 158. Row text "Headache" starts after body padding (28)
+   * + row padding (14) + checkbox (16) + gap (10) ≈ 68; tip on the
+   * bold name → stage (100, 158) → cursor (97, 156). */
+  42%      { transform: translate(97px, 156px); }
+  44%      { transform: translate(97px, 156px) scale(0.85); }
+  48%      { transform: translate(97px, 156px); }
+  /* HOLD over the question modal that just opened — settle in the middle.
+   * Modal at top:80, left:80, right:80, height ≈ 230 → center (270, 195).
+   * Cursor (267, 193). */
+  60%      { transform: translate(267px, 193px); }
+  95%      { transform: translate(267px, 193px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Edit a problem (key === 'reviewed')
+ * Two screens: home (with a concrete Problem Station card on the right) →
+ * question modal overlay. Cursor clicks a Problem Station row to open the
+ * modal in edit mode, then clicks a new rating option to revise the answer.
+ * Timeline (10s):
+ *   0.00–0.05  cursor idle bottom-right; home visible
+ *   0.05–0.22  cursor glides up to "Headache" row
+ *   0.22–0.25  click pulse on row
+ *   0.25–0.30  home fades out → modal fades in
+ *   0.30–0.50  cursor glides down to a new rating option in the modal
+ *   0.50–0.55  click pulse on option; option highlights as the new selection
+ *   0.55–0.95  HOLD on highlighted option
+ *   0.95–1.00  fade back to start
+ * Stage coords: 540×360. Header 60px; body content starts at y=74.
+ * Right column (Problem Station) ≈ x=315, width 201. Headache row center
+ * ≈ (415, 116). Modal: top:60, left:80, right:80 → width 380. Option 3
+ * center ≈ (270, 202).
+ * ============================================================ */
+.hint-edit-stage { font-family: var(--font-body); }
+/* Dimmed home body behind the modal — same shade as the past-problems demo. */
+.hint-edit-stage .hint-mini-body.dim {
+  background: rgba(0, 0, 0, 0.06);
+  height: calc(100% - 60px);
+}
+
+.hint-edit-stage .hint-edit-screen-home  { animation: hintEditScreenHome 10s linear infinite; }
+.hint-edit-stage .hint-edit-screen-modal { animation: hintEditScreenModal 10s linear infinite; }
+@keyframes hintEditScreenHome {
+  0%, 22%  { opacity: 1; }
+  27%, 100% { opacity: 0; }
+}
+@keyframes hintEditScreenModal {
+  0%, 25%  { opacity: 0; }
+  30%, 95% { opacity: 1; }
+  100%     { opacity: 0; }
+}
+
+/* Concrete Problem Station card on the right of the home screen. Mirrors
+ * the real `.problem-station` chassis at mini scale (cyan 2px border, white
+ * card, small heading bar + a couple of rows). */
+.hint-mini-card.hint-edit-station {
+  padding: 8px 10px;
+  border: 2px solid #68C5E6;
+  background: white;
+  gap: 6px;
+}
+.hint-edit-station-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--spots-gray-900);
+  letter-spacing: 0.2px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--spots-border);
+}
+.hint-edit-station-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 2px;
+}
+/* Each Problem Station row at mini scale: white card with a 1px gray border,
+ * name on the left, 3 small answer dots on the right. The concrete row gets
+ * an orange highlight border to draw the eye to the click target. */
+.hint-edit-ps-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  background: white;
+  border: 1px solid var(--spots-border, #e5e7eb);
+  border-radius: 6px;
+  min-height: 22px;
+}
+.hint-edit-ps-row.concrete {
+  border: 2px solid var(--spots-orange);
+}
+.hint-edit-ps-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+}
+.hint-edit-ps-name-bar {
+  display: block;
+  height: 8px;
+  width: 55%;
+  border-radius: 4px;
+  background: #cbd5e1;
+}
+.hint-edit-ps-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.hint-edit-ps-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--spots-gray-300, #d1d5db);
+  display: inline-block;
+}
+.hint-edit-ps-dot.is-on {
+  background: var(--spots-green);
+}
+
+/* Click-pulse around the Headache row. The row sits in the right-column
+ * card; pulse fires at ~22-25% to match the cursor. */
+.hint-edit-target-row {
+  position: absolute;
+  inset: -3px;
+  width: auto;
+  height: auto;
+  border: 2px solid var(--spots-orange);
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  animation: hintEditPulseRow 10s ease-out infinite;
+}
+@keyframes hintEditPulseRow {
+  0%, 21%  { opacity: 0; transform: scale(0.97); }
+  23%      { opacity: 0.9; transform: scale(1); }
+  27%      { opacity: 0; transform: scale(1.06); }
+  100%     { opacity: 0; transform: scale(1.06); }
+}
+
+/* Question-modal overlay. Mirrors `.hint-pp-modal` chassis but a hair taller
+ * (extra row for Close / Next action buttons), with rating pills in the same
+ * escalating-blue palette as the real `.rating-btn`. */
+.hint-edit-modal {
+  position: absolute;
+  top: 60px;
+  left: 80px;
+  right: 80px;
+  background: white;
+  border: 2px solid var(--spots-orange);
+  border-radius: 14px;
+  padding: 14px 20px 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hint-edit-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--spots-blue-dark);
+  text-align: center;
+}
+.hint-edit-modal-prompt {
+  height: 8px;
+  background: #d1d5db;
+  border-radius: 4px;
+  width: 80%;
+  margin: 0 auto;
+}
+.hint-edit-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  margin-top: 2px;
+}
+.hint-edit-modal-option {
+  position: relative;
+  border-radius: 999px;
+  height: 14px;
+  width: 78%;
+  background: #c5e6ff;
+  border: 2px solid transparent;
+}
+.hint-edit-modal-option:nth-child(2) { background: #6fc7ff; }
+.hint-edit-modal-option:nth-child(3) { background: #2d9cff; }
+.hint-edit-modal-option:nth-child(4) { background: #1a73e8; }
+/* The user's previous answer (2nd option) starts "selected" and stays that
+ * way until 0.54 when the user clicks option 3; then option 2 reverts to
+ * unselected and option 3 takes the selection ring. */
+.hint-edit-modal-option.was-selected {
+  animation: hintEditWasSelected 10s linear infinite;
+}
+.hint-edit-modal-option.becomes-selected {
+  animation: hintEditBecomesSelected 10s linear infinite;
+}
+@keyframes hintEditWasSelected {
+  0%, 53%   { box-shadow: 0 0 0 2px var(--spots-orange); }
+  55%, 100% { box-shadow: none; }
+}
+@keyframes hintEditBecomesSelected {
+  0%, 53%   { box-shadow: none; }
+  55%, 95%  { box-shadow: 0 0 0 2px var(--spots-orange); }
+  100%      { box-shadow: none; }
+}
+
+.hint-edit-modal-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.hint-edit-pd {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #cdd2da;
+}
+.hint-edit-pd.active { background: var(--spots-blue); }
+
+.hint-edit-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+.hint-edit-btn {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--spots-blue-dark);
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.hint-edit-btn.primary {
+  background: var(--spots-blue-medium);
+  color: white;
+  border-color: var(--spots-blue-medium);
+}
+
+/* Click-pulse over the 3rd rating option. Inset within the pill since the
+ * option itself is small (14px tall). */
+.hint-edit-target-option {
+  position: absolute;
+  inset: -3px;
+  width: auto;
+  height: auto;
+  border: 2px solid var(--spots-orange);
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  animation: hintEditPulseOption 10s ease-out infinite;
+}
+@keyframes hintEditPulseOption {
+  0%, 51%  { opacity: 0; transform: scale(0.95); }
+  53%      { opacity: 0.9; transform: scale(1); }
+  57%      { opacity: 0; transform: scale(1.06); }
+  100%     { opacity: 0; transform: scale(1.06); }
+}
+
+.hint-edit-cursor { animation: hintEditCursor 10s ease-in-out infinite; }
+@keyframes hintEditCursor {
+  /* Cursor SVG tip offset (3, 2). Stage 540×360. */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* Headache row center: header 60 + body padding 14 + card padding 8 +
+   * title 19 + gap 6 + rows margin-top 2 + row half-height 13 ≈ y=122.
+   * Right col center x ≈ 416 (24 padding + 281 left col + 10 gap + 200/2).
+   * Cursor tip (3, 2) offset → translate (413, 120). */
+  20%      { transform: translate(413px, 120px); }
+  23%      { transform: translate(413px, 120px) scale(0.82); }
+  27%      { transform: translate(413px, 120px); }
+  /* Hold a beat while the modal fades in. */
+  32%      { transform: translate(413px, 120px); }
+  /* Option 3 in modal: modal top 60 + padding 14 + title 16 + gap 8 +
+   * prompt 8 + gap 8 + options margin-top 2 + opt1 14 + gap 6 + opt2 14
+   * + gap 6 + opt3 half 7 ≈ y=163. Modal x center: 80 + (540-160)/2 = 270.
+   * Tip offset → translate (267, 161). */
+  50%      { transform: translate(267px, 161px); }
+  53%      { transform: translate(267px, 161px) scale(0.82); }
+  57%      { transform: translate(267px, 161px); }
+  /* HOLD on selected option. */
+  95%      { transform: translate(267px, 161px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Delete a problem (key === 'delete')
+ * Reuses the home + concrete Problem Station chassis from the edit demo.
+ * Cursor glides to the red trash glyph on the Headache row, clicks, and the
+ * row fades + slides out to reveal an "empty Problem Station" state.
+ * Timeline (10s):
+ *   0.00–0.05  cursor idle bottom-right; Headache row visible
+ *   0.05–0.32  cursor glides to the trash glyph on the row
+ *   0.32–0.36  click pulse on trash
+ *   0.36–0.55  Headache row fades + slides up out; empty-state text fades in
+ *   0.55–0.95  HOLD on empty Problem Station
+ *   0.95–1.00  fade back to start
+ * ============================================================ */
+.hint-del-stage { font-family: var(--font-body); }
+.hint-del-stage .hint-del-screen { opacity: 1; }
+
+/* Right-side group inside the row: dots + trash glyph. */
+.hint-del-ps-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* Mini trash button — red glyph, no chrome, sized to match the mini row. */
+.hint-del-ps-trash {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--spots-red);
+  line-height: 0;
+}
+.hint-del-ps-trash svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Wrapper around the Headache row. Animates max-height + margin to nothing
+ * with overflow: hidden so the row inside keeps its full border/padding
+ * untouched — no border-width / padding animation on the row itself, which
+ * is what caused the orange-border jitter in the previous version. The
+ * negative `margin-bottom` at the collapsed end cancels the parent flex
+ * `gap: 6px` so the empty-state slides flush up against the (now zero-
+ * height) wrapper, letting the card condense further. */
+.hint-del-row-wrap {
+  overflow: hidden;
+  animation: hintDelRowWrap 10s ease-out infinite;
+}
+@keyframes hintDelRowWrap {
+  /* Full size while the cursor approaches and clicks. */
+  0%, 34%   { max-height: 36px; opacity: 1; margin-bottom: 0; }
+  /* Fade the row out first (keeps height stable so the click pulse
+   * doesn't get clipped mid-pulse). */
+  39%       { max-height: 36px; opacity: 0; margin-bottom: 0; }
+  /* Collapse cleanly: height to 0, swallow the flex gap with -6px margin. */
+  46%, 95%  { max-height: 0; opacity: 0; margin-bottom: -6px; }
+  100%      { max-height: 36px; opacity: 1; margin-bottom: 0; }
+}
+.hint-del-ps-empty {
+  font-size: 10px;
+  color: var(--spots-text-muted, #6b7280);
+  text-align: center;
+  padding: 2px 4px 0;
+  opacity: 0;
+  animation: hintDelEmptyIn 10s ease-out infinite;
+}
+@keyframes hintDelEmptyIn {
+  0%, 48%   { opacity: 0; }
+  55%, 95%  { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
+/* Click-pulse ring over the trash glyph. Trash sits at the far right of
+ * the Headache row. Row right edge ≈ x=506 (right col card width ~200,
+ * card padding 10, row padding 8). Trash glyph ~12px wide → center ≈ 494.
+ * Row center y ≈ 123. The pulse is anchored to the trash span (inset:-4px). */
+.hint-del-target-trash {
+  position: absolute;
+  /* Anchor to the trash glyph via the right edge of the row. */
+  top: 50%;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  border: 2px solid var(--spots-red);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  animation: hintDelPulseTrash 10s ease-out infinite;
+}
+@keyframes hintDelPulseTrash {
+  0%, 32%  { opacity: 0; transform: scale(0.7); }
+  34%      { opacity: 0.9; transform: scale(0.85); }
+  38%      { opacity: 0; transform: scale(1.6); }
+  100%     { opacity: 0; transform: scale(1.6); }
+}
+
+.hint-del-cursor { animation: hintDelCursor 10s ease-in-out infinite; }
+@keyframes hintDelCursor {
+  /* Cursor SVG tip offset (3, 2). Stage 540×360. */
+  0%, 5%   { transform: translate(470px, 310px); }
+  /* Trash glyph center ≈ (494, 123). Tip offset → translate (491, 121). */
+  30%      { transform: translate(491px, 121px); }
+  34%      { transform: translate(491px, 121px) scale(0.82); }
+  38%      { transform: translate(491px, 121px); }
+  /* HOLD near the trash position while the row fades + empty-state fades in. */
+  95%      { transform: translate(491px, 121px); }
+  100%     { transform: translate(470px, 310px); }
+}
+
+/* ============================================================
+ * Demo: Completed a session (key === 'completed')
+ * Single mini-screen (no nav). Concrete elements: real avatar SVG and the
+ * dropdown panel. Everything else stays abstract (nav dots, body cards).
+ * Timeline (10s):
+ *   0.00–0.05  cursor idle bottom-right; dropdown hidden
+ *   0.05–0.27  cursor glides up-right to avatar
+ *   0.27–0.32  click pulse on avatar; dropdown panel fades in
+ *   0.32–0.55  cursor glides down to Logout button in dropdown
+ *   0.55–0.60  click pulse on Logout; Logout button highlights
+ *   0.60–0.95  HOLD on highlighted Logout
+ *   0.95–1.00  fade back to start (cursor and dropdown reset)
+ * ============================================================ */
+.hint-comp-stage { font-family: var(--font-body); }
+
+/* Single screen — no fade, always visible. */
+.hint-comp-screen { opacity: 1; }
+/* The concrete avatar in the header — mirror the real `.avatar` chassis:
+ * the circle clips the image, and the image is positioned absolutely so
+ * the figure's head sits centered in the ring (the avatarAsset.svg has
+ * head + shoulders; covering full-bleed crops the head off the top). */
+.hint-comp-stage .hint-mini-avatar.concrete {
+  display: block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: white;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid var(--spots-blue-medium);
+  padding: 0;
+}
+.hint-comp-stage .hint-mini-avatar.concrete img {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 92%;
+  height: auto;
+  transform: translateX(-50%);
+}
+
+/* Click-pulse ring over the avatar. The avatar sits at the right edge of
+ * the mini header inside `.hint-mini-user` (padding-right 12, gear 22,
+ * gap 8, avatar 32). Avatar center ≈ (512, 30) in stage coords. The pulse
+ * ring is absolutely positioned to the header, 32×32 centered on avatar. */
+.hint-comp-target-avatar {
+  position: absolute;
+  top: 13px;
+  left: 495px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--spots-blue-medium);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  animation: hintCompPulseAvatar 10s ease-out infinite;
+}
+@keyframes hintCompPulseAvatar {
+  0%, 25%  { opacity: 0; transform: scale(0.7); }
+  27%      { opacity: 0.9; transform: scale(0.7); }
+  32%      { opacity: 0; transform: scale(1.7); }
+  100%     { opacity: 0; transform: scale(1.7); }
+}
+
+/* Dropdown panel — mirrors the real `.user-menu-panel` at mini-stage scale.
+ * Anchored to the avatar (right: 12px, top: just under header). Fades in
+ * after the avatar click; stays visible through the end of the loop. */
+.hint-comp-dropdown {
+  position: absolute;
+  top: 64px;
+  right: 8px;
+  width: 170px;
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(6,83,149,0.22), 0 4px 10px rgba(0,0,0,0.10);
+  padding: 10px 12px 8px;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  animation: hintCompDropdown 10s linear infinite;
+}
+@keyframes hintCompDropdown {
+  0%, 30%   { opacity: 0; transform: translateY(-4px); }
+  33%, 95%  { opacity: 1; transform: translateY(0); }
+  100%      { opacity: 0; transform: translateY(-4px); }
+}
+.hint-comp-arrow {
+  position: absolute;
+  top: -7px;
+  right: 18px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-top: 1px solid var(--spots-border);
+  border-left: 1px solid var(--spots-border);
+  transform: rotate(45deg);
+}
+.hint-comp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 0 4px;
+  position: relative;
+  z-index: 1;
+}
+.hint-comp-label {
+  font-size: 9px;
+  color: var(--spots-text-muted);
+  letter-spacing: 0.2px;
+}
+.hint-comp-value {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--spots-gray-900);
+}
+.hint-comp-divider {
+  height: 1px;
+  background: var(--spots-border);
+  margin: 6px -12px;
+}
+.hint-comp-logout {
+  position: relative;
+  padding: 5px 0 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--spots-red);
+  border-radius: 6px;
+  /* Highlight pulses on at the click moment and persists through the hold. */
+  animation: hintCompLogoutHighlight 10s ease-out infinite;
+}
+@keyframes hintCompLogoutHighlight {
+  0%, 54%   { background: transparent; color: var(--spots-red); }
+  56%, 93%  { background: #fdeceb; color: #c53727; }
+  95%, 100% { background: transparent; color: var(--spots-red); }
+}
+
+/* Click-pulse ring over the Logout button. The button sits inside the
+ * dropdown (top 64, right 8, padding 10/12, info ≈ 30px, divider with
+ * 6+13 margin, logout text center ≈ y=127). Horizontal: dropdown left
+ * edge 362 + content padding 12 = 374; "Logout" text ~45px wide → text
+ * center ≈ 397. Cursor tip (3,2) → translate (394, 125). */
+.hint-comp-target-logout {
+  position: absolute;
+  inset: -3px -8px;
+  border: 2px solid var(--spots-red);
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  animation: hintCompPulseLogout 10s ease-out infinite;
+}
+@keyframes hintCompPulseLogout {
+  0%, 53%  { opacity: 0; transform: scale(0.95); }
+  56%      { opacity: 0.9; transform: scale(1); }
+  60%      { opacity: 0; transform: scale(1.06); }
+  100%     { opacity: 0; transform: scale(1.06); }
+}
+
+.hint-comp-cursor { animation: hintCompCursor 10s ease-in-out infinite; }
+@keyframes hintCompCursor {
+  /* Cursor tip offset is (3, 2) inside the 22×22 SVG. */
+  0%, 5%    { transform: translate(470px, 310px); }
+  /* Glide up-right to avatar center ≈ (512, 30) → translate (509, 28). */
+  25%       { transform: translate(509px, 28px); }
+  27%       { transform: translate(509px, 28px) scale(0.82); }
+  31%       { transform: translate(509px, 28px); }
+  /* Hold a beat while the dropdown fades in. */
+  36%       { transform: translate(509px, 28px); }
+  /* Glide down-left to Logout center ≈ (397, 127) → translate (394, 125). */
+  54%       { transform: translate(394px, 125px); }
+  56%       { transform: translate(394px, 125px) scale(0.82); }
+  60%       { transform: translate(394px, 125px); }
+  /* HOLD on highlighted Logout. */
+  95%       { transform: translate(394px, 125px); }
+  100%      { transform: translate(470px, 310px); }
+}
+
+/* =================================================================== */
+/* ACCOUNT DROPDOWN (avatar)                                             */
+/* =================================================================== */
+/* `.user-menu` wraps the avatar trigger + its popup. We make it a flow
+ * container so the trigger keeps participating in the .user-area flex row,
+ * but the panel is absolutely positioned below the avatar so it overlays
+ * the page content without pushing the header layout around. */
+.user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.user-menu .avatar.is-open {
+  /* Slight outline boost when the menu is open so the trigger feels active. */
+  box-shadow: 0 0 0 4px rgba(98,189,228,0.25), 0 4px 10px rgba(0,0,0,0.10);
+}
+.user-menu-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  width: 240px;
+  background: white;
+  border: 1px solid var(--spots-border);
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(6,83,149,0.18), 0 4px 12px rgba(0,0,0,0.06);
+  padding: 14px 16px;
+  z-index: 120;
+  animation: userMenuIn 140ms ease-out;
+}
+@keyframes userMenuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Small pointer triangle anchored under the avatar's center-ish */
+.um-arrow {
+  position: absolute;
+  top: -8px;
+  right: 28px;
+  width: 14px;
+  height: 14px;
+  background: white;
+  border-top: 1px solid var(--spots-border);
+  border-left: 1px solid var(--spots-border);
+  transform: rotate(45deg);
+}
+.um-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 0 6px;
+  position: relative;
+  z-index: 1;
+}
+.um-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.3;
+}
+.um-label {
+  font-size: 11px;
+  color: var(--spots-text-muted);
+  letter-spacing: 0.2px;
+}
+.um-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--spots-gray-900);
+}
+.um-divider {
+  height: 1px;
+  background: var(--spots-border);
+  margin: 8px -16px;
+}
+.um-logout {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 6px 0 2px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--spots-red);
+  cursor: pointer;
+  border-radius: 6px;
+}
+.um-logout:hover {
+  color: #c53727;
+  text-decoration: underline;
+}
+.um-logout:focus-visible {
+  outline: 2px solid var(--spots-red);
+  outline-offset: 2px;
+}
+/* Gated state — shown until all tutorial steps for the active session are
+ * complete. Gray text, not-allowed cursor, no hover decoration. The native
+ * `title` attribute provides the explanatory tooltip. */
+.um-logout.is-disabled {
+  color: var(--spots-text-muted);
+  cursor: not-allowed;
+}
+.um-logout.is-disabled:hover {
+  color: var(--spots-text-muted);
+  text-decoration: none;
+}
+/* Session-2 "Finish Tutorial" mode — visually distinct from Logout so the
+ * terminal action reads as a positive completion rather than a sign-off. */
+.um-logout.is-finish {
+  color: var(--spots-green);
+}
+.um-logout.is-finish:hover {
+  color: #5a9a23;
+  text-decoration: underline;
+}
+.um-logout.is-finish:focus-visible {
+  outline: 2px solid var(--spots-green);
+  outline-offset: 2px;
+}
+/* Reason tooltip — pops out from the disabled Logout button on hover/focus
+ * to show exactly which tutorial steps remain. Positioned absolute to the
+ * left of the dropdown panel so it doesn't displace layout. */
+.um-logout-wrap {
+  position: relative;
+}
+.um-reason {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 18px);
+  transform: translateY(-50%);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid var(--spots-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 28px rgba(20, 56, 96, 0.18);
+  font-size: 12px;
+  color: var(--spots-gray-900);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+  z-index: 130;
+}
+.um-reason::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-left-color: #fff;
+}
+.um-logout-wrap:hover .um-reason,
+.um-logout-wrap:focus-within .um-reason {
+  opacity: 1;
+}
+.um-reason-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--spots-text-muted);
+}
+.um-reason-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.um-reason-item {
+  position: relative;
+  padding-left: 18px;
+  line-height: 1.35;
+}
+.um-reason-item::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--spots-text-muted);
+  background: transparent;
+}
+
+/* =================================================================== */
+/* TUTORIAL COMPLETE (terminal screen, end of Session 2)                 */
+/* =================================================================== */
+/* The check sits ABOVE the "You've completed" greeting inside the same
+ * welcome-card chassis used by the welcome and welcome-back screens.
+ * Block-level + margin auto centers within the centered welcome-card. */
+.welcome-card .tutorial-complete-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--spots-green);
+  color: white;
+  font-size: 40px;
+  font-weight: 800;
+  margin: 0 auto 18px;
+  line-height: 1;
+}
+
+/* =================================================================== */
+/* LOGIN SCREEN — mirrors production `LoginPageLayout` + `LoginForm`     */
+/* (decorative bubbles, welcome logo, white bordered card, info box)     */
+/* =================================================================== */
+.login-page-layout {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--spots-bg-light);
+  display: flex;
+  flex-direction: column;
+}
+.login-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.login-page-layout .deco-bubbles {
+  position: absolute;
+  top: -90px;
+  left: -70px;
+  width: 256px;
+  height: 256px;
+  pointer-events: none;
+  z-index: 0;
+}
+.login-page-layout .deco-bubbles img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.login-section {
+  max-width: 768px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+.login-section .welcome-logo {
+  text-align: center;
+  margin: 24px 0;
+}
+.login-section .welcome-logo .welcome-greet {
+  font-size: 18px;
+  color: var(--spots-text);
+  margin: 0 0 8px;
+  font-family: var(--font-body);
+}
+.login-section .welcome-logo-img {
+  display: flex;
+  justify-content: center;
+}
+.login-section .welcome-logo-img img {
+  width: 240px;
+  height: auto;
+}
+.login-section .login-card {
+  width: 100%;
+  max-width: 720px;
+  background: var(--spots-bg-light);
+  border: 2px solid var(--spots-blue-welcome);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  box-sizing: border-box;
+}
+.login-section .login-title {
+  font-family: var(--font-headings);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--spots-gray-900);
+  margin: 0 0 16px;
+}
+.login-section .login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.login-section .login-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--spots-blue-welcome);
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--spots-gray-900);
+  background: white;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.login-section .login-input::placeholder {
+  color: #9ca3af;
+}
+.login-section .login-input:focus {
+  outline: none;
+  border-color: #5AA1D9;
+  box-shadow: 0 0 0 2px #5AA1D9;
+}
+.login-section .login-pw-wrap {
+  position: relative;
+}
+.login-section .login-pw-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+}
+.login-section .login-pw-toggle:hover {
+  color: #374151;
+}
+.login-section .login-pw-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+.login-section .login-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.login-section .login-btn-primary {
+  background: var(--spots-blue-welcome);
+  color: white;
+  border: 1px solid var(--spots-blue-welcome);
+}
+.login-section .login-btn-primary:hover {
+  background: var(--spots-blue);
+  border-color: var(--spots-blue);
+}
+.login-section .login-btn-outline {
+  background: white;
+  color: var(--spots-gray-900);
+  border: 1px solid var(--spots-border);
+}
+.login-section .login-btn-outline:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+.login-section .login-google-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+}
+.login-section .login-google-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.login-section .login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+.login-section .login-divider-rule {
+  flex: 1;
+  height: 1px;
+  background: #d1d5db;
+}
+.login-section .login-divider-text {
+  font-size: 13px;
+  color: #6b7280;
+  letter-spacing: 0.5px;
+}
+.login-section .login-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.login-section .login-link {
+  background: transparent;
+  border: none;
+  color: var(--spots-blue-welcome);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: inherit;
+}
+.login-section .login-link:hover {
+  text-decoration: underline;
+}
+.login-section .login-info-box {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin-top: 32px;
+  background: var(--spots-bg-light);
+  border: 2px solid #5AA1D9;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: var(--shadow-card);
+  box-sizing: border-box;
+}
+.login-section .login-info-box p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #1f2937;
+  text-align: justify;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .login-page-layout .deco-bubbles {
+    top: -130px;
+    left: -110px;
+    width: 384px;
+    height: 384px;
+  }
+}
+@media (max-width: 480px) {
+  .login-section .login-card,
+  .login-section .login-info-box { padding: 18px; }
+  .login-section .welcome-logo-img img { width: 180px; }
+}
+
+/* =================================================================== */
+/* A11Y — keyboard focus visibility                                     */
+/* Every interactive surface gets a 3px ring in --spots-blue-medium     */
+/* when focused via keyboard. Mouse clicks don't trigger :focus-visible */
+/* in modern browsers, so this doesn't add visual noise for pointer use.*/
+/* =================================================================== */
+:focus { outline: none; }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--spots-blue-medium);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* =================================================================== */
+/* A11Y — reduced motion                                                */
+/* Disable looping demo animations + transitions for users who opt out. */
+/* Keeps the app fully functional; just freezes motion.                 */
+/* =================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =================================================================== */
+/* RESPONSIVE LAYOUT                                                    */
+/* The desktop tutorial was designed for a 1180×820 window. Online,     */
+/* visitors land on every viewport — phones, narrow laptops, big        */
+/* monitors. We mirror the production site's breakpoint (~769px) and    */
+/* keep the layout legible without redesigning every screen.            */
+/* =================================================================== */
+
+/* Wide viewports: cap content width but let the page background extend  */
+.site-main, .site-footer .footer-grid { max-width: 1280px; }
+
+/* Mid-range viewports — narrow laptops, large tablets in landscape */
+@media (max-width: 1024px) {
+  .site-header { padding: 14px 24px 8px 150px; }
+  .logo-corner { width: 240px; height: 260px; }
+  .site-main { padding: 12px 28px 28px; }
+  .site-footer { padding: 28px 48px 18px; }
+}
+
+/* Narrow viewports — tablets in portrait, small laptops, the production  */
+/* site's mobile breakpoint                                              */
+@media (max-width: 768px) {
+  .site-header {
+    flex-wrap: wrap;
+    padding: 8px 16px 8px 16px;
+    min-height: 0;
+    gap: 8px;
+  }
+  /* Demote the corner banner to a small inline logo. It's an absolute   */
+  /* element so it can't reflow — shrink + reposition.                  */
+  .logo-corner {
+    position: static;
+    width: auto; height: auto;
+    display: flex;
+    align-items: center;
+  }
+  .logo-corner .curve, .logo-corner .confetti { display: none; }
+  .logo-corner .word-logo {
+    position: static;
+    width: 130px; height: auto;
+    margin: 0;
+  }
+  .top-nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+  .nav-item .label { font-size: 11px; }
+  .nav-icon { width: 56px; height: 56px; }
+  .user-area { margin-left: auto; }
+  .icon-btn.settings-btn, .icon-btn.avatar-btn { width: 56px; height: 56px; }
+  .avatar-btn img { width: 56px; height: 56px; }
+
+  /* Main content padding */
+  .site-main { padding: 10px 16px 24px; }
+
+  /* Two-column layouts stack (already partially handled above 1000px) */
+  .two-col, .dash-grid { grid-template-columns: 1fr !important; }
+
+  /* Picker grids tighten up */
+  .picker-grid--activities,
+  .picker-grid--feelings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* Body-parts layout collapses to single column */
+  .bp-layout { grid-template-columns: 1fr !important; }
+  .bp-figure { max-width: 100%; }
+
+  /* Modals fit the viewport */
+  .modal-card { max-width: calc(100vw - 32px); padding: 18px; }
+
+  /* Footer collapses to single column */
+  .site-footer { padding: 20px 16px 16px; }
+  .site-footer .footer-grid { grid-template-columns: 1fr; gap: 18px; }
+
+  /* Tutorial dock floats at top-right, but on small screens it crowds   */
+  /* the avatar — push it down below the header.                         */
+  .tutorial-dock { top: auto; bottom: 16px; right: 16px; }
+  .tutorial-dock-panel { right: 0; max-width: calc(100vw - 32px); }
+
+  /* Hint modal mini-stage is 540×360 at desktop. Allow it to shrink.    */
+  .hint-card { max-width: calc(100vw - 24px); }
+  .hint-stage { transform: scale(0.85); transform-origin: top center; }
+}
+
+/* Very narrow viewports — phones in portrait */
+@media (max-width: 480px) {
+  .picker-grid--activities,
+  .picker-grid--feelings { grid-template-columns: 1fr; }
+  .nav-icon { width: 48px; height: 48px; }
+  .icon-btn.settings-btn, .icon-btn.avatar-btn { width: 48px; height: 48px; }
+  .avatar-btn img { width: 48px; height: 48px; }
+  .hint-stage { transform: scale(0.7); }
+}
