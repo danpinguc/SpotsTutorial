@@ -58,7 +58,7 @@ window.SPOTS_DATA = (function () {
     // REDCap seed: abdo_pain, nausea, vomiting
     abdomen:     ['Stomach pain', 'Feel sick to stomach', 'Vomiting', 'Constipation', 'Runny or watery poop'],
     back:        ['Back pain', 'Stiffness', 'Bumps or rash'],
-    buttocks:    ['Pain', 'Rash', 'Itching'],
+    buttocks:    ['Pain', 'Rash', 'Itching', 'Runny or watery poop'],
     skin:        ['Itchy red bumps on skin', 'Itching', 'Bruising', 'Dry skin', 'Sores'],
     left_arm:    ['Arm pain', 'Weakness', 'Numbness or tingly feeling', 'Bruise'],
     right_arm:   ['Arm pain', 'Weakness', 'Numbness or tingly feeling', 'Bruise'],

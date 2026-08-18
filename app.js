@@ -792,8 +792,8 @@
     const button = el('button', {
       class: 'tutorial-dock-btn' + (open ? ' is-open' : ''),
       'aria-label': t(
-        `Tutorial progress: ${completed} of ${total} complete`,
-        `Progreso del tutorial: ${completed} de ${total} completados`
+        `Practice Guide Progress: ${completed} of ${total} complete`,
+        `Progreso de la guía de práctica: ${completed} de ${total} completados`
       ),
       'aria-expanded': open ? 'true' : 'false',
       onclick: (e) => {
@@ -830,7 +830,7 @@
       onclick: (e) => e.stopPropagation(),
     },
       el('div', { class: 'tdp-header' },
-        el('span', { class: 'tdp-title' }, t('Tutorial Progress')),
+        el('span', { class: 'tdp-title' }, t('Practice Guide Progress')),
         el('span', { class: 'tdp-count' }, `${completed}/${total}`),
       ),
       el('div', { class: 'progress-bar' },
@@ -901,7 +901,7 @@
           el('div', { class: 'welcome-logo' },
             el('img', { src: './assets/Spots-Logo-UpdatedBG.svg', alt: 'SPOTS' }),
           ),
-          el('div', { class: 'tagline' }, t('Symptom & Problem Observation Tracking System')),
+          el('div', { class: 'tagline' }, t('Smart Pediatric Oncology Tracker of Symptoms')),
           el('p', { class: 'blurb' }, t('Tell us how you have been feeling. Tap things on your body, activities, or feelings that have been bothering you. There are no right or wrong answers.')),
           el('button', { class: 'btn-primary', onclick: () => go('home') }, t('Get Started →')),
         ),
@@ -1310,7 +1310,7 @@
     );
 
     const overlay = el('div', {
-      class: 'modal-backdrop',
+      class: 'modal-backdrop activity-backdrop',
       onclick: () => go('activities'), // click outside the card to dismiss
     }, detailCard);
 
@@ -2252,8 +2252,8 @@
 
   // First-load orientation popup. Shown ONCE on the home screen in session
   // 1, right after the user clicks "Get Started" on the welcome screen.
-  // Calls out the floating tutorial-progress button (top-right) and the
-  // per-step `?` hint buttons inside it. Dismissed via the "Got it!"
+  // Calls out the floating Practice Guide Progress button (top-right) and
+  // the per-step `?` hint buttons inside it. Dismissed via the "Got it!"
   // button, Escape, or backdrop click. State lives on `introDismissed`.
   function introModal() {
     if (state.introDismissed) return null;
@@ -2295,16 +2295,21 @@
         'aria-labelledby': 'intro-modal-title',
         onclick: (e) => e.stopPropagation(),
       },
-        el('h2', { id: 'intro-modal-title' }, t('Quick Tutorial Tips')),
-        el('p', { class: 'tutorial-popup-sub' }, t('Two things to know before you start:')),
+        el('h2', { id: 'intro-modal-title' }, t('Practice Guide Tips')),
         el('div', { class: 'intro-rows' },
           el('div', { class: 'intro-row' },
             dockMini,
-            el('p', {}, t('Your tutorial progress lives in the top-right corner. Click it any time to see your steps.')),
+            el('p', { html: t(
+              'Your <strong>Practice Guide Progress</strong> is in the top-right corner. Click it anytime to view your steps.',
+              'Tu <strong>Progreso de la guía de práctica</strong> está en la esquina superior derecha. Haz clic cuando quieras para ver tus pasos.',
+            ) }),
           ),
           el('div', { class: 'intro-row' },
             el('span', { class: 'intro-hint-badge', 'aria-hidden': 'true' }, '?'),
-            el('p', {}, t('Inside tutorial progress, click the ? next to any step to watch a quick demo.')),
+            el('p', { html: t(
+              'Need help with a step? Click the <strong>?</strong> next to it to watch a quick demo.',
+              '¿Necesitas ayuda con un paso? Haz clic en el <strong>?</strong> junto a él para ver una demostración rápida.',
+            ) }),
           ),
         ),
         el('div', { class: 'tutorial-popup-actions' },
@@ -2822,7 +2827,7 @@
         // an intro blurb). Copy mirrors the live site's SpotsIntro string.
         el('div', { class: 'login-info-box' },
           el('p', {},
-            el('strong', {}, t("SPOTS (Supporting Pediatric Oncology Treatment Success) helps children and teens with cancer track how they're feeling throughout treatment — and share that information with their care team. This is a guided tutorial; no account is required."))),
+            el('strong', {}, t("SPOTS (Smart Pediatric Oncology Tracker of Symptoms) helps children and teens with cancer track how they're feeling throughout treatment — and share that information with their care team. This is a guided tutorial; no account is required."))),
         ),
       ),
       ),
@@ -3013,7 +3018,21 @@
   // re-capture the scroll position).
   let lastModalOpen = false;
 
+  function isEmbeddedFrame() {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
   function applyModalScrollLock(isOpen) {
+    // Inside the spots-app TutorialModal iframe, locking html/body hides
+    // the only usable scrollbar (the iframe). Overlay cards scroll themselves.
+    if (isEmbeddedFrame()) {
+      lastModalOpen = isOpen;
+      return;
+    }
     if (isOpen && !lastModalOpen) {
       // Modal just opened — capture current scroll so we can restore it.
       const y = window.scrollY || window.pageYOffset || 0;
