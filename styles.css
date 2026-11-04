@@ -703,7 +703,7 @@ body.modal-open {
  * are taller to accommodate the multi-line title at the top and the dots
  * affordance at the bottom-right. */
 .picker-grid--feelings {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 .picker-card {
@@ -726,7 +726,7 @@ body.modal-open {
 }
 .picker-card .top-label {
   font-size: 13px;
-  text-align: left;
+  text-align: center;
   padding: 4px 8px 0;
   color: var(--spots-gray-900);
   font-family: var(--font-body);
@@ -737,7 +737,6 @@ body.modal-open {
   height: 130px;
   object-fit: cover;
   border-radius: 6px;
-  background: var(--spots-bg-light-gray);
 }
 .picker-card:hover { transform: translateY(-2px); }
 .picker-card.is-selected {
@@ -752,7 +751,7 @@ body.modal-open {
 }
 .picker-card.feelings .feelings-label {
   font-family: var(--font-headings);
-  font-weight: 800;
+  font-weight: 600;
   font-size: 13.5px;
   line-height: 1.3;
   color: var(--spots-gray-900);

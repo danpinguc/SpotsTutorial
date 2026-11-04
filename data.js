@@ -72,17 +72,17 @@ window.SPOTS_DATA = (function () {
 
   // ---------- Activities (slug + image) ----------
   const activities = [
-    { key: 'bathing',       label: 'Bathing' ,           image: 'Bathing.jpg' },
-    { key: 'eating',        label: 'Eating' ,             image: 'Eating.jpg' },
-    { key: 'getting_ready', label: 'Getting Ready' ,        image: 'Getting_Ready.jpg' },
-    { key: 'reading',       label: 'Reading' ,              image: 'Reading.jpg' },
-    { key: 'running',       label: 'Running' ,            image: 'Running.jpg' },
-    { key: 'screen_time',   label: 'Screen Time' ,image: 'Screen_Time.jpg' },
-    { key: 'sleeping',      label: 'Sleeping' ,            image: 'Sleeping.jpg' },
-    { key: 'talking',       label: 'Talking' ,            image: 'Talking.jpg' },
-    { key: 'thinking',      label: 'Thinking' ,            image: 'Thinking.jpg' },
-    { key: 'toileting',     label: 'Toileting' ,        image: 'Toileting.jpg' },
-    { key: 'walking',       label: 'Walking' ,           image: 'Walking.jpg' },
+    { key: 'bathing',       label: 'Bathing' ,           image: 'showering.svg' },
+    { key: 'eating',        label: 'Eating' ,             image: 'eating.svg' },
+    { key: 'getting_ready', label: 'Getting Ready' ,        image: 'grooming.svg' },
+    { key: 'reading',       label: 'Reading' ,              image: 'reading.svg' },
+    { key: 'running',       label: 'Running' ,            image: 'running.svg' },
+    { key: 'screen_time',   label: 'Screen Time' ,image: 'video-games.svg' },
+    { key: 'sleeping',      label: 'Sleeping' ,            image: 'sleeping.svg' },
+    { key: 'talking',       label: 'Talking' ,            image: 'talking.svg' },
+    { key: 'thinking',      label: 'Thinking' ,            image: 'thinking.svg' },
+    { key: 'toileting',     label: 'Toileting' ,        image: 'using-toilet.svg' },
+    { key: 'walking',       label: 'Walking' ,           image: 'walking.svg' },
   ];
 
   // Activity-specific problem prompts. mock-symptoms-data.ts maps:
