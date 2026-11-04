@@ -1,0 +1,10 @@
+{
+  "name": "spots-tutorial",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port 5500 --open"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}
